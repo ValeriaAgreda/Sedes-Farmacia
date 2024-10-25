@@ -5,6 +5,7 @@ import MapViewRegistro from './MapViewEdit';
 
 const EditarFarmacia = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState('');
   const { id } = useParams(); // Obtener el ID de la farmacia de los parámetros de la URL
 
   // Estados del formulario
@@ -24,6 +25,8 @@ const EditarFarmacia = () => {
   const [ci, setCi] = useState('');
   const [nit, setNit] = useState('');
   const [celular, setCelular] = useState('');
+  const [horasFarmacia, setHorasFarmacia] = useState('8h');
+  const [tipoFarmacia, setTipoFarmacia] = useState('Farmacia Privada');
   const [observaciones, setObservaciones] = useState(''); 
   const [medicamentosControlados, setMedicamentosControlados] = useState('');
   const [fileBase64, setFileBase64] = useState(null);
@@ -35,85 +38,85 @@ const EditarFarmacia = () => {
   const [codigosZona, setCodigosZona] = useState([]);
 
   // Cargar datos actuales de la farmacia
-  // Cargar datos actuales de la farmacia
-  // Cargar datos actuales de la farmacia
-  useEffect(() => {
-    const fetchFarmacia = async () => {
-      try {
-        const response = await fetch(`http://localhost:8082/farmacia/cargarfarmacia/56`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const farmacia = await response.json();
-  
-         // Asignar datos de la farmacia
-         setNombreFarmacia(farmacia.nombre || '');
-         setNroResolucion(farmacia.numero_registro || '');
-         setFechaResolucion(farmacia.fecha_registro ? farmacia.fecha_registro.split('T')[0] : '');
-         // Buscar el objeto completo en cada lista correspondiente
-        const zonaEncontrada = zonas.find((z) => z.id === farmacia.zona_id);
-        const sectorEncontrado = sectores.find((s) => s.id === farmacia.sector_id);
-        const categoriaEncontrada = categoriasEstablecimiento.find((c) => c.id === farmacia.tipo_id);
-        const codigoZonaEncontrado = codigosZona.find((c) => c.id === farmacia.codigo_id);
-        // Establecer los valores de los pickers
-        setZona(zonaEncontrada || {});
-        setSector(sectorEncontrado || {});
-        setCategoriaEstablecimiento(categoriaEncontrada || {});
-        setCodigoZona(codigoZonaEncontrado || {});
+useEffect(() => {
+  const fetchFarmacia = async () => {
+    try {
+      const response = await fetch(`http://localhost:8082/farmacia/cargarfarmacia/${id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const farmacia = await response.json();
 
-         setDireccion(farmacia.direccion || '');
-         setLatitud(farmacia.latitud || null);
-         setLongitud(farmacia.longitud || null);
-         setNit(farmacia.nit || '');
-         setObservaciones(farmacia.observaciones || ''); // Observaciones
+      // Asignar datos de la farmacia con valores por defecto
+      setNombreFarmacia(farmacia.nombre || '');
+      setNroResolucion(farmacia.numero_registro || '');
+      setFechaResolucion(farmacia.fecha_registro ? farmacia.fecha_registro.split('T')[0] : '');
+      const zonaEncontrada = zonas.find((z) => z.id === farmacia.zona_id) || {};
+      const sectorEncontrado = sectores.find((s) => s.id === farmacia.sector_id) || {};
+      const categoriaEncontrada = categoriasEstablecimiento.find((c) => c.id === farmacia.tipo_id) || {};
+      const codigoZonaEncontrado = codigosZona.find((c) => c.id === farmacia.codigo_id) || {};
+      
+      // Establecer los valores de los pickers
+      setZona(zonaEncontrada);
+      setSector(sectorEncontrado);
+      setCategoriaEstablecimiento(categoriaEncontrada);
+      setCodigoZona(codigoZonaEncontrado);
 
+      setDireccion(farmacia.direccion || '');
+      setLatitud(farmacia.latitud || null);
+      setLongitud(farmacia.longitud || null);
+      setNit(farmacia.nit || '');
+      setObservaciones(farmacia.observaciones || ''); // Observaciones
 
-        // Verificar si la farmacia tiene sustancias controladas
-      const sustanciasResponse = await fetch(`http://localhost:8082/farmacia/farmacia_sustancias/56`);
+      // Verificar si la farmacia tiene sustancias controladas
+      const sustanciasResponse = await fetch(`http://localhost:8082/farmacia/farmacia_sustancias/${id}`);
       const sustanciasData = await sustanciasResponse.json();
       setMedicamentosControlados(sustanciasData.tiene_sustancias ? 'Si' : 'No');
-        // Convertir imagen desde binario a base64
-        if (farmacia.imagen) {
-          const base64String = btoa(
-            new Uint8Array(farmacia.imagen.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
-          );
-          setFileBase64(`data:image/jpeg;base64,${base64String}`);
-        }
-        // Verificar si el dueno_id es el correcto y cargar los datos del dueño
-        if (farmacia.dueno_id) {
-            console.log(`Cargando datos del dueño con ID: ${farmacia.dueno_id}`);
-            fetchDueno(farmacia.dueno_id); // Llamada a la función para cargar el dueño
-          }
-      } catch (error) {
-        console.error('Error fetching farmacia:', error);
+
+      // Convertir imagen desde binario a base64
+      if (farmacia.imagen) {
+        const base64String = btoa(
+          new Uint8Array(farmacia.imagen.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
+        );
+        setFileBase64(`data:image/jpeg;base64,${base64String}`);
       }
       
-    };
-    // Función para cargar los datos del dueño
-    const fetchDueno = async (duenoId) => {
-        try {
-          const response = await fetch(`http://localhost:8082/farmacia/duenofarmacia/${duenoId}`);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const dueno = await response.json();
-  
-          // Asignar los datos del dueño
-          setNombre(dueno.nombre || '');
-          setApellidoPaterno(dueno.primer_apellido || '');
-          setApellidoMaterno(dueno.segundo_apellido || '');
-          setCi(dueno.carnet_identidad || '');
-          setCelular(dueno.celular || '');
-        } catch (error) {
-          console.error('Error fetching dueno:', error);
-        }
-      };
-    // Llamar a la función una vez que los datos de los pickers estén cargados
-    if (zonas.length > 0 && sectores.length > 0 && categoriasEstablecimiento.length > 0 && codigosZona.length > 0) {
-        fetchFarmacia();
+      // Verificar si el dueno_id es el correcto y cargar los datos del dueño
+      if (farmacia.dueno_id) {
+        console.log(`Cargando datos del dueño con ID: ${farmacia.dueno_id}`);
+        fetchDueno(farmacia.dueno_id); // Llamada a la función para cargar el dueño
       }
-    }, [id, zonas, sectores, categoriasEstablecimiento, codigosZona]);
-  
+    } catch (error) {
+      console.error('Error fetching farmacia:', error);
+    }
+  };
+
+  // Función para cargar los datos del dueño
+  const fetchDueno = async (duenoId) => {
+    try {
+      const response = await fetch(`http://localhost:8082/farmacia/duenofarmacia/${duenoId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const dueno = await response.json();
+
+      // Asignar los datos del dueño con valores por defecto
+      setNombre(dueno.nombre || '');
+      setApellidoPaterno(dueno.primer_apellido || '');
+      setApellidoMaterno(dueno.segundo_apellido || '');
+      setCi(dueno.carnet_identidad || '');
+      setCelular(dueno.celular || '');
+    } catch (error) {
+      console.error('Error fetching dueno:', error);
+    }
+  };
+
+  // Llamar a la función una vez que los datos de los pickers estén cargados
+  if (zonas.length > 0 && sectores.length > 0 && categoriasEstablecimiento.length > 0 && codigosZona.length > 0) {
+    fetchFarmacia();
+  }
+}, [id, zonas, sectores, categoriasEstablecimiento, codigosZona]);
+
   // Cargar datos para los pickers al montar el componente
   useEffect(() => {
     const fetchOptions = async () => {
@@ -160,6 +163,33 @@ const EditarFarmacia = () => {
   };
 
   const handleSubmit = async () => {
+    // Validaciones
+    const missingFields = [];
+    
+    if (!nombreFarmacia) missingFields.push('Nombre Farmacia');
+    if (!nroResolucion) missingFields.push('Nro Resolución');
+    if (!direccion) missingFields.push('Dirección');
+    if (!nombre) missingFields.push('Nombre Propietario');
+    if (!apellidoPaterno) missingFields.push('Apellido Paterno');
+    if (!apellidoMaterno) missingFields.push('Apellido Materno');
+    if (!ci) missingFields.push('Carnet de Identidad');
+    if (!nit) missingFields.push('NIT');
+    if (!celular) missingFields.push('Celular');
+    if (!observaciones) missingFields.push('Observaciones');
+    if (medicamentosControlados === '') missingFields.push('Selecciona Medicamentos Controlados');
+    if (!fileBase64) missingFields.push('Imagen (debe cargarse un archivo)');
+    if (latitud === null || longitud === null) missingFields.push('Ubicación (debe hacer doble clic en el mapa)');
+    
+    if (missingFields.length > 0) {
+      setError(`Por favor, complete los siguientes campos: ${missingFields.join(', ')}`);
+      return;
+    } else {
+      setError(''); // Limpia el error si todas las validaciones pasan
+    }
+
+
+
+
     const farmaciaData = {
       nombre: nombreFarmacia,
       numero_registro: nroResolucion,
@@ -184,7 +214,7 @@ const EditarFarmacia = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8082/farmacia/actualizarfarmacia/56`, {
+      const response = await fetch(`http://localhost:8082/farmacia/actualizarfarmacia/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -315,13 +345,9 @@ const EditarFarmacia = () => {
   initialLng={longitud} 
 />
 
-      {latitud && longitud && (
-        <p>Ubicación seleccionada - Latitud: {latitud}, Longitud: {longitud}</p>
-      )}
+      
         
-      <button onClick={() => console.log('Ubicación Confirmada')} className="bottomButton2">
-        <span className="buttonText2">Confirmar Ubicación</span>
-      </button>
+      
 
       <h2 className="subtitle1">Cargar Imagen</h2>
 
@@ -387,6 +413,30 @@ const EditarFarmacia = () => {
         onChange={(e) => setCelular(e.target.value)}
         className="input1"
       />
+
+
+<h2 className="subtitle1">Datos Farmacia:</h2>
+      <label className="label1">Horas de Farmacia:</label>
+      <select
+        value={horasFarmacia}
+        onChange={(e) => setHorasFarmacia(e.target.value)}
+        className="picker1"
+      >
+        <option value="8h">8h</option>
+        <option value="12h">12h</option>
+        <option value="24h">24h</option>
+      </select>
+      
+      <label className="label1">Tipo de Farmacia:</label>
+      <select
+        value={tipoFarmacia}
+        onChange={(e) => setTipoFarmacia(e.target.value)}
+        className="picker1"
+      >
+        <option value="Farmacia Privada">Farmacia Privada</option>
+        <option value="Farmacia Pública">Farmacia Pública</option>
+      </select>
+
       <label className="label1">Observaciones:</label>
       <input
         placeholder="Observaciones"
@@ -420,6 +470,10 @@ const EditarFarmacia = () => {
         </div>
       </div>
 
+
+      <div className="errorContainer">
+      <label className="error">{error}</label>
+      </div>
       <div className="buttonContainer1">
         <button className="homeButton" onClick={() => navigate('/menu-admin')}>
           <span className="homeButtonText">Cancelar</span>

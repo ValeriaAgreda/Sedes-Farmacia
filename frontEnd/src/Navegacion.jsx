@@ -15,7 +15,7 @@ function Navegacion() {
         <Route path="/login" element={<Login />} />
         <Route path="/menu-admin" element={<MenuAdmin />} />
         <Route path="/registro-farmacia" element={<RegistroFarmacia />} />
-        <Route path="/editar-farmacia" element={<EditarFarmacia />} />
+        <Route path="/editar-farmacia/:id" element={<EditarFarmacia />} />
       </Routes>
     </Router>
   );

@@ -9,7 +9,19 @@ body {
     background-color: #f5f5f5; 
   }
   
- 
+ .tituloContainer{
+    color: #FBFBFB;
+    text-align: center;
+    margin-bottom: 35px;
+    background-color: #393939;
+    border-top-right-radius: 60px;
+    border-top-left-radius: 60px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    padding: 70px;
+    padding-left: 100px;
+    padding-right: 100px;
+ }
   
   h1 {
     font-size: 2rem;
@@ -58,10 +70,8 @@ body {
     border-color: #ff708a !important;
   }
   
-  .map-container {
-    height: 500px; /* Cambia este valor según el tamaño deseado */
-    width: 100%; /* Elimina el valor 1000% y ajusta a 100% */
-    border: 2px solid black; /* Este borde es temporal, lo puedes quitar después */
+  .container12 {
+    margin: 10px;
 }
 
   
