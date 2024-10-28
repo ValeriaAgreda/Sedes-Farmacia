@@ -32,14 +32,13 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     const { nombre, hora_entrada, hora_salida, dia_turno, turno } = req.body;
 
-    // Validación de entrada
     if (!nombre || !hora_entrada || !hora_salida || !dia_turno) {
         return res.status(400).json({ error: 'Nombre, hora_entrada, hora_salida y dia_turno son requeridos' });
     }
 
     MysqlConnection.query(
         'INSERT INTO Horas (nombre, hora_entrada, hora_salida, dia_turno, turno, status) VALUES (?, ?, ?, ?, ?, 1);',
-        [nombre, hora_entrada, hora_salida, dia_turno, turno || 0],  // El campo turno puede ser opcional (0 por defecto)
+        [nombre, hora_entrada, hora_salida, dia_turno, turno || 0],
         (error, result) => {
             if (error) {
                 console.error('Error creating hour:', error);
@@ -54,14 +53,13 @@ router.put('/:id', (req, res) => {
     const { nombre, hora_entrada, hora_salida, dia_turno, turno } = req.body;
     const { id } = req.params;
 
-    // Validación de entrada
     if (!nombre || !hora_entrada || !hora_salida || !dia_turno) {
         return res.status(400).json({ error: 'Nombre, hora_entrada, hora_salida y dia_turno son requeridos' });
     }
 
     MysqlConnection.query(
         'UPDATE Horas SET nombre = ?, hora_entrada = ?, hora_salida = ?, dia_turno = ?, turno = ?, last_update = CURRENT_TIMESTAMP WHERE id = ? AND status = 1;',
-        [nombre, hora_entrada, hora_salida, dia_turno, turno || 0, id],  // El campo turno puede ser opcional
+        [nombre, hora_entrada, hora_salida, dia_turno, turno || 0, id],
         (error, result) => {
             if (error) {
                 console.error(`Error updating hour with ID ${id}:`, error);
@@ -74,45 +72,119 @@ router.put('/:id', (req, res) => {
         });
 });
 
-// Eliminar una hora por ID (marcar como inactiva)
-router.delete('/:id', (req, res) => {
-    const { id } = req.params;
-    MysqlConnection.query('UPDATE Horas SET status = 0 WHERE id = ?;', [id], (error, result) => {
+// Crear turnos y relaciones con farmacias
+router.post('/guardarTurnos', (req, res) => {
+    const { farmacias, mesActual, anioActual } = req.body;
+
+    if (!Array.isArray(farmacias) || farmacias.length === 0) {
+        return res.status(400).json({ error: 'Se requiere un arreglo de farmacias válido' });
+    }
+
+    const totalDiasMes = new Date(anioActual, mesActual, 0).getDate();
+    const totalDiasMesSiguiente = new Date(anioActual, mesActual + 1, 0).getDate();
+    let turnosGenerados = [];
+    let relacionFarmaciaHoras = [];
+    let posicionGlobal = 0;
+    let idUltimaFarmacia = null;
+
+    const generarTurnosParaMes = (diasMes, anio, mes, inicio) => {
+        let colaFarmacias = [...farmacias];
+        for (let i = 0; i < inicio; i++) {
+            colaFarmacias.push(colaFarmacias.shift());
+        }
+
+        for (let dia = 1; dia <= diasMes; dia++) {
+            const farmaciaAsignada = colaFarmacias.shift();
+            const fechaTurno = new Date(anio, mes - 1, dia).toISOString().split('T')[0];
+
+            turnosGenerados.push([
+                `Turno ${dia}`,
+                '08:00:00',
+                '20:00:00',
+                fechaTurno,
+                1,
+                1
+            ]);
+
+            relacionFarmaciaHoras.push({ farmaciaId: farmaciaAsignada.id, fechaTurno });
+            idUltimaFarmacia = farmaciaAsignada.id;
+            posicionGlobal++;
+            colaFarmacias.push(farmaciaAsignada);
+        }
+        return posicionGlobal;
+    };
+
+    posicionGlobal = generarTurnosParaMes(totalDiasMes, anioActual, mesActual, 0);
+    const inicioSegundoMes = farmacias.findIndex(farmacia => farmacia.id === idUltimaFarmacia);
+    generarTurnosParaMes(totalDiasMesSiguiente, anioActual, mesActual + 1, inicioSegundoMes);
+
+    const insertHorasQuery = 'INSERT INTO Horas (nombre, hora_entrada, hora_salida, dia_turno, turno, status) VALUES ?';
+    MysqlConnection.query(insertHorasQuery, [turnosGenerados], (error, horasResult) => {
         if (error) {
-            console.error(`Error deleting hour with ID ${id}:`, error);
-            return res.status(500).json({ error: 'Internal server error' });
+            return res.status(500).json({ error: 'Error al guardar turnos en Horas', details: error.message });
         }
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Hora not found' });
-        }
-        res.json({ Status: 'Hora deleted' });
+
+        const turnosIds = horasResult.insertId;
+        const relaciones = relacionFarmaciaHoras.map((relacion, index) => [
+            relacion.farmaciaId,
+            turnosIds + index
+        ]);
+
+        const insertRelacionQuery = 'INSERT INTO Farmacia_Horas (farmacia_id, hora_id) VALUES ?';
+        MysqlConnection.query(insertRelacionQuery, [relaciones], (errorRelacion) => {
+            if (errorRelacion) {
+                return res.status(500).json({ error: 'Error al vincular farmacias y turnos', details: errorRelacion.message });
+            }
+            res.json({ message: 'Turnos y relaciones guardados exitosamente' });
+        });
     });
 });
 
-// Nueva ruta para guardar turnos generados
-router.post('/guardarTurnos', (req, res) => {
-    const turnos = req.body;
+// Ruta para obtener turnos por código y mes
+router.get('/turnosZonaMes/:codigoId/:mes/:anio', (req, res) => {
+    const { codigoId, mes, anio } = req.params;
 
-    if (!turnos || !turnos.length) {
-        return res.status(400).json({ error: 'No se recibieron turnos para guardar' });
-    }
+    const query = `
+        SELECT h.dia_turno, h.hora_entrada, h.hora_salida, f.nombre AS farmacia_nombre, f.direccion, c.nombre AS codigo_nombre, c.id AS codigo_zona
+        FROM Horas h
+        JOIN Farmacia_Horas fh ON h.id = fh.hora_id
+        JOIN Farmacia f ON fh.farmacia_id = f.id
+        JOIN Codigo c ON f.codigo_id = c.id
+        WHERE c.id = ? AND MONTH(h.dia_turno) = ? AND YEAR(h.dia_turno) = ? AND h.status = 1;
+    `;
 
-    let query = 'INSERT INTO Horas (nombre, hora_entrada, hora_salida, status, dia_turno, turno) VALUES ?';
-    const values = turnos.map(turno => [
-        turno.farmacia_nombre,
-        turno.hora_entrada || '08:00:00', // hora de entrada predeterminada, ajusta según tu lógica
-        turno.hora_salida || '20:00:00', // hora de salida predeterminada, ajusta según tu lógica
-        1, // status activo por defecto
-        turno.fecha_turno, // fecha del turno generada
-        turno.turno ? 1 : 0 // 1 si tiene turno, 0 si no
-    ]);
-
-    MysqlConnection.query(query, [values], (error, result) => {
+    MysqlConnection.query(query, [codigoId, mes, anio], (error, rows) => {
         if (error) {
-            console.error('Error guardando los turnos:', error);
-            return res.status(500).json({ error: 'Error interno del servidor' });
+            console.error('Error fetching turns by code and month:', error);
+            return res.status(500).json({ error: 'Internal server error' });
         }
-        res.json({ message: 'Turnos guardados exitosamente', insertedRows: result.affectedRows });
+        res.json(rows);
+    });
+});
+
+
+// Obtener el ID de la última farmacia asignada para un código específico
+router.get('/ultimaFarmaciaAsignada/:codigoId', (req, res) => {
+    const { codigoId } = req.params;
+
+    const query = `
+        SELECT fh.farmacia_id AS lastId
+        FROM Farmacia_Horas fh
+        JOIN Horas h ON fh.hora_id = h.id
+        JOIN Farmacia f ON fh.farmacia_id = f.id
+        WHERE f.codigo_id = ? AND h.status = 1
+        ORDER BY h.dia_turno DESC LIMIT 1;
+    `;
+
+    MysqlConnection.query(query, [codigoId], (error, rows) => {
+        if (error) {
+            console.error('Error fetching last assigned pharmacy:', error);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        if (rows.length === 0) {
+            return res.json({ lastId: null }); // No hay una farmacia previa asignada
+        }
+        res.json({ lastId: rows[0].lastId });
     });
 });
 
