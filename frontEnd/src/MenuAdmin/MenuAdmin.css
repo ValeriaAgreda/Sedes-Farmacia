@@ -78,37 +78,50 @@
   overflow: hidden; /* Asegura que los bordes redondeados se apliquen bien */
 }
 
-.header2 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #d6d6d6;
-  padding: 10px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-width: 1px;
-  border-color: #F6F4F4;
+/* Asegurarse de que la lista tenga scroll si es necesario */
+.list {
+  max-height: 300px; /* Ajusta la altura según tus necesidades */
+  overflow-y: auto;  /* Habilitar el scroll vertical */
+  margin-top: 10px;
 }
-
-.headerText2 {
+.busquedaTitle{
+  font-size: 20px;
   font-weight: bold;
+  text-align: center;
   color: black;
-  font-size: 14px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-
+/* Asegura que los elementos de la lista se alineen bien, incluso con texto largo */
 .listItem2 {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   padding: 10px;
-  border-bottom: 0px solid #fff;
+  border-bottom: 1px solid #ccc;
+  border-color: transparent;
+  cursor: pointer;
+  word-wrap: break-word;  /* Para que el texto largo no desborde */
+  
 }
 
 .listItemText2 {
-  font-size: 13px;
-  padding: 2px;
+  flex: 1; /* Permite que el texto ocupe el espacio disponible */
+  padding-right: 10px; /* Espacio entre los textos */
+  color: rgba(0, 0, 0, 0.511);
+  font-size: 14px;
+}
+
+.header2 {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #ddd;
   font-weight: bold;
-  color: #808080;
+}
+
+.headerText2 {
+  flex: 1;
+  padding-right: 10px;
 }
 
 .bottomButton2 {
@@ -133,6 +146,28 @@
 }
 
 
+.bottomButton3 {
+  background-color: #F44C7F;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: 3px solid #F44C7F;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 550px;
+  height: 50px;
+}
+.bottomButton3:hover {
+  border-color: #F44C7F; 
+  background-color: #fff;
+}
+
+.bottomButton3:hover .buttonText2 {
+  color: #F44C7F; 
+}
+
+
 
 .logoutButton2 {
   border: 1px solid #F44C7F;
@@ -147,4 +182,29 @@
 
 .logoutButtonText2 {
   color: #F44C7F;
+}
+/* Estilo para cuando una farmacia está seleccionada */
+.selected {
+  background-color: #f44c7e3e;
+  
+}
+
+
+/* Personalizar la barra de desplazamiento en la lista */
+.list::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: #00000050; /* Color de la parte que se mueve */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+  background-color: #F44C7F; /* Color al pasar el mouse */
+}
+
+.list::-webkit-scrollbar-track {
+  background: #b8b7b700; /* Color de la parte de fondo */
+  border-radius: 0px; /* Bordes redondeados */
 }

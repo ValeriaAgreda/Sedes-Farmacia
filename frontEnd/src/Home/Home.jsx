@@ -15,7 +15,7 @@ function Home() {
   // Estado para almacenar los detalles de la farmacia
   const [farmacia, setFarmacia] = useState(null);
   const [fileBase64, setFileBase64] = useState('');
-  const [selectedFarmaciaId, setSelectedFarmaciaId] = useState(20); // ID por defecto
+  const [selectedFarmaciaId, setSelectedFarmaciaId] = useState(0); // ID por defecto
 
   const handleHome = () => {
     navigate('/login');
@@ -49,80 +49,87 @@ useEffect(() => {
 
 
   return (
-    <Container fluid className="p-4">
-      <header className="text-center mb-4 header-custom">
-        <h1>Sedes - Cochabamba</h1>
-        <p>Farmacias Cercanas a Usted</p>
-        <p>Estamos a tu disposición para ayudarte.</p>
-      </header>
+    <div className="container1">
+      <div className='tituloContainer'>
+        <h6>Sedes - Cochabamba</h6>
+        <h2>Farmacias Cercanas a Usted</h2>
+        <h6>Estamos a tu disposición para ayudarte.</h6>
+      </div>
+        
 
-      {/* Campo de búsqueda */}
-      <Form className="mb-3">
-        <Row className="justify-content-center">
-          <Col xs="auto">
-            <Form.Control 
-              type="text" 
-              placeholder="Buscar Farmacia por nombre" 
-              value={searchTerm}
-              onChange={handleSearchChange}
-              style={{ marginBottom: '10px', padding: '5px' }}
-            />
-          </Col>
-        </Row>
-      </Form>
+    
 
-      <Row className="mb-3 justify-content-center">
-        <Col xs="auto">
-          <Button className="custom-btn" onClick={() => setFilter('abiertas')}>Farmacias Abiertas</Button>
-        </Col>
-        <Col xs="auto">
-          <Button className="custom-btn" onClick={() => setFilter('sustancias')}>Sustancias Controladas</Button>
-        </Col>
-        <Col xs="auto">
-          <Button className="custom-btn">Farmacias de Turno</Button>
-        </Col>
-      </Row>
+      <input
+        placeholder="Buscar Farmacia por nombre"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        className="input1"
+      />
 
-      <Row className="mb-3 justify-content-center">
-        <Col>
-          <div className="map-container">
-            {/* Pasar searchTerm y filter a MapView, y la función para seleccionar una farmacia */}
-            <MapView 
+
+          
+          <button className="bottomButton3" onClick={() => setFilter('abiertas')}>
+        <span className="buttonText2">Farmacias Legalmente Autorizadas</span>
+      </button>
+
+
+
+        <button className="bottomButton3" onClick={() => setFilter('sustancias')}>
+        <span className="buttonText2">Farmacias Autorizadas para Dispensar Medicamentos Controlados</span>
+      </button>
+
+      <button className="bottomButton3" >
+        <span className="buttonText2">Farmacias de Turno</span>
+      </button>
+      <div className='container12'>
+
+      </div>
+
+      
+          
+          <MapView 
               filter={filter} 
               searchTerm={searchTerm} 
               onSelectFarmacia={setSelectedFarmaciaId} // Pasar la función
             />
-          </div>
-        </Col>
-      </Row>
+         
+            
+         <div className='container12'>
 
-      <div className="text-center">
-        <Button className="custom-btn">Actualizar Ubicación</Button>
       </div>
+        
+      <button className="loginButton">
+        <span className="loginButtonText">Actualizar Ubicación</span>
+      </button>
+      
 
       {farmacia && (
-    <div className="farmacia-details mt-4">
-        <h3>
+    <div className="listContainer2" style={{ padding: '20px', width:"550px" }}>
+        <h3 style={{  fontSize: "25px", fontWeight: 'bold', margin: '20px' }}>
             {farmacia.nombre} -{' '}
             <span className="text-success">Legal</span>{' '}
         </h3>
+        <p className="subtitle1" style={{  fontSize: "20px"  }}>Fotografia Referencia:</p>
         {fileBase64 ? ( // Renderiza el <img> solo si hay una imagen
-            <img src={fileBase64} alt="Farmacia" style={{ maxWidth: '100%', height: 'auto' }} />
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '30px' }}>
+            <img src={fileBase64} alt="Farmacia" style={{  width: '250px', height: '300px', borderRadius: '10px'  }} />
+            </div>
         ) : ( // Si no hay imagen, no renderiza nada
             <p>No hay imagen disponible para esta farmacia.</p>
         )}
-        <p>Horarios de Atención:</p>
+        <p className="subtitle1" style={{  fontSize: "20px"  }}>Horarios de Atención:</p>
         <ul className="centered-list">
-            <li>Lunes: 9-12 am & 2-5 pm</li>
-            <li>Martes: 9-12 am & 2-5 pm</li>
-            <li>Miércoles: 9-12 am & 2-5 pm</li>
-            <li>Jueves: 9-12 am & 2-5 pm</li>
-            <li>Viernes: 9-12 am & 2-5 pm</li>
-            <li>Sábado: 9-12 am & 2-5 pm</li>
-            <li>Domingo: Cerrado</li>
+            <li >Lunes: 9-12 am & 2-5 pm</li>
+            <li >Martes: 9-12 am & 2-5 pm</li>
+            <li >Miércoles: 9-12 am & 2-5 pm</li>
+            <li >Jueves: 9-12 am & 2-5 pm</li>
+            <li >Viernes: 9-12 am & 2-5 pm</li>
+            <li >Sábado: 9-12 am & 2-5 pm</li>
+            <li >Domingo: Cerrado</li>
         </ul>
         <a
-            href={`https://www.google.com/maps?q=${farmacia.latitud},${farmacia.longitud}`} // Modificado para usar latitud y longitud
+            style={{ fontSize: "20px", fontWeight: 'bold', margin: '10px' }}
+            href={`https://www.google.com/maps?q=${farmacia.latitud.toString().replace(',', '.')},${farmacia.longitud.toString().replace(',', '.')}`} // Asegúrate de usar '.' como separador decimal
             target="_blank" // Abre en una nueva pestaña
             rel="noopener noreferrer" // Mejora la seguridad al abrir una nueva pestaña
         >
@@ -133,16 +140,15 @@ useEffect(() => {
 )}
 
 
-      <footer className="text-center mt-4 footer-custom">
-        <p>¿Tienes una Farmacia?</p>
-        <Button className="custom-btn-outline">
-          <Link to="/notificaciones" style={{ color: 'inherit', textDecoration: 'none' }}>Notificaciones</Link>
-        </Button>
-        <Button className="custom-btn-outline" onClick={handleHome}>
-          <Link to="/bienvenido" style={{ color: 'inherit', textDecoration: 'none' }}>Bienvenido</Link>
-        </Button>
-      </footer>
-    </Container>
+    
+
+      <div className="container1">
+      <p>¿Tienes una Cuenta?</p>
+        <button className="loginButton" onClick={handleHome} style={{width:"200px"}}>
+          <span className="loginButtonText">Iniciar Session</span>
+        </button>
+      </div>
+    </div>
   );
 }
 

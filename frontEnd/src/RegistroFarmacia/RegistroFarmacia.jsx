@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './RegistroFarmacia.css'; // Importamos el archivo de estilos
+import './RegistroFarmacia.css';
 import MapViewRegistro from './MapViewRegistro';
 
 const RegistroFarmacia = () => {
-  
-  const navigate = useNavigate(); // Inicializa useNavigate
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const handleMenu = () => {
     navigate('/MenuAdmin'); // Redirige a la ruta de MenuAdmin
@@ -17,12 +17,11 @@ const RegistroFarmacia = () => {
   const [categoriasEstablecimiento, setCategoriasEstablecimiento] = useState([]);
   const [codigosZona, setCodigosZona] = useState([]);
 
-
   // Estados del formulario
   const [nombreFarmacia, setNombreFarmacia] = useState('');
   const [categoriaEstablecimiento, setCategoriaEstablecimiento] = useState('');
   const [nroResolucion, setNroResolucion] = useState('');
-  
+
   const hoy = new Date().toISOString().split('T')[0];
   const [fechaResolucion, setFechaResolucion] = useState(hoy);
 
@@ -96,31 +95,54 @@ const RegistroFarmacia = () => {
   }, []);
 
   const handleSubmit = async () => {
-    // Crear el objeto de datos para enviar al backend
+    // Validaciones
+    const missingFields = [];
+    
+    if (!nombreFarmacia) missingFields.push('Nombre Farmacia');
+    if (!nroResolucion) missingFields.push('Nro Resolución');
+    if (!direccion) missingFields.push('Dirección');
+    if (!nombre) missingFields.push('Nombre Propietario');
+    if (!apellidoPaterno) missingFields.push('Apellido Paterno');
+    if (!apellidoMaterno) missingFields.push('Apellido Materno');
+    if (!ci) missingFields.push('Carnet de Identidad');
+    if (!nit) missingFields.push('NIT');
+    if (!celular) missingFields.push('Celular');
+    if (!obs) missingFields.push('Observaciones');
+    if (!medicamentosControlados) missingFields.push('Selecciona Medicamentos Controlados');
+    if (!fileBase64) missingFields.push('Imagen (debe cargarse un archivo)');
+    if (latitud === null || longitud === null) missingFields.push('Ubicación (debe hacer doble clic en el mapa)');
+    
+    if (missingFields.length > 0) {
+      setError(`Por favor, complete los siguientes campos: ${missingFields.join(', ')}`);
+      return;
+    } else {
+      setError(''); // Limpia el error si todas las validaciones pasan
+    }
+
     const farmaciaData = {
-      nombre: nombreFarmacia, 
+      nombre: nombreFarmacia,
       numero_registro: nroResolucion,
       direccion: direccion,
       latitud: latitud,
       longitud: longitud,
       fecha_registro: fechaResolucion,
-      razon_social: nombre, 
+      razon_social: nombre,
       nit: nit,
-      zona_id: zona.id, 
-      sector_id: sector.id, 
+      zona_id: zona.id,
+      sector_id: sector.id,
       observaciones: obs,
-      tipo_id: categoriaEstablecimiento.id, 
-      codigo_id: codigozona.id,  
-      imagen: fileBase64, 
-      nombreDueno: nombre, 
+      tipo_id: categoriaEstablecimiento.id,
+      codigo_id: codigozona.id,
+      imagen: fileBase64,
+      nombreDueno: nombre,
       primer_apellido: apellidoPaterno,
       segundo_apellido: apellidoMaterno,
       carnet_identidad: ci,
       celular: celular
     };
-  
+
     console.log("Datos enviados al backend:", farmaciaData);
-  
+
     try {
       const response = await fetch('http://localhost:8082/farmacia/nuevafarmacia', {
         method: 'POST',
@@ -129,22 +151,20 @@ const RegistroFarmacia = () => {
         },
         body: JSON.stringify(farmaciaData)
       });
-  
+
       console.log('Response status:', response.status);
-      const responseData = await response.text(); 
+      const responseData = await response.text();
       console.log('Response data:', responseData);
-  
+
       if (response.ok) {
-        const result = JSON.parse(responseData); 
-        const farmaciaId = result.id; // Obtener el ID de la farmacia registrada
-  
-        // Verificar si medicamentos controlados es "Sí"
+        const result = JSON.parse(responseData);
+        const farmaciaId = result.id;
+
         if (medicamentosControlados === 'Si') {
-          // Hacer una segunda solicitud para insertar en farmacia_sustancias
           const sustanciasData = {
             farmacia_id: farmaciaId
           };
-          
+
           const sustanciasResponse = await fetch('http://localhost:8082/farmacia/farmacia_sustancias', {
             method: 'POST',
             headers: {
@@ -152,14 +172,14 @@ const RegistroFarmacia = () => {
             },
             body: JSON.stringify(sustanciasData)
           });
-  
+
           if (sustanciasResponse.ok) {
             console.log('Relación de farmacia con sustancias controladas registrada');
           } else {
             console.error('Error al registrar la relación en farmacia_sustancias');
           }
         }
-  
+
         alert('Farmacia registrada exitosamente con ID: ' + farmaciaId);
         navigate('/menu-admin');
       } else {
@@ -170,8 +190,7 @@ const RegistroFarmacia = () => {
       alert('Ocurrió un error al registrar la farmacia.');
     }
   };
-  
-  
+
   
   
   
@@ -224,25 +243,7 @@ const RegistroFarmacia = () => {
       
       <h2 className="subtitle1">Dirección Farmacia:</h2>
       
-      <label className="label1">Departamento:</label>
-      <select
-        value={departamento}
-        onChange={(e) => setDepartamento(e.target.value)}
-        className="picker1"
-      >
-        <option value="Cochabamba">Cochabamba</option>
-        <option value="La Paz">La Paz</option>
-      </select>
       
-      <label className="label1">Municipio:</label>
-      <select
-        value={municipio}
-        onChange={(e) => setMunicipio(e.target.value)}
-        className="picker1"
-      >
-        <option value="Sacaba">Sacaba</option>
-        <option value="Cercado">Cercado</option>
-      </select>
       
       <label className="label1">Zona:</label>
 <select
@@ -272,13 +273,7 @@ const RegistroFarmacia = () => {
   ))}
 </select>
 
-      <label className="label1">Red:</label>
-      <input
-        placeholder="Red"
-        value={red}
-        onChange={(e) => setRed(e.target.value)}
-        className="input1"
-      />
+      
       
       <label className="label1">Sector:</label>
 <select
@@ -305,13 +300,9 @@ const RegistroFarmacia = () => {
       <h2 className="subtitle1">Seleccionar Ubicación:</h2>
       <MapViewRegistro onLocationSelect={handleLocationSelect} />
 
-      {latitud && longitud && (
-        <p>Ubicación seleccionada - Latitud: {latitud}, Longitud: {longitud}</p>
-      )}
 
-      <button onClick={() => console.log('Ubicación Confirmada')} className="bottomButton2">
-        <span className="buttonText2">Confirmar Ubicación</span>
-      </button>
+
+      
 
       <h2 className="subtitle1">Cargar Imagen</h2>
 
@@ -378,14 +369,7 @@ const RegistroFarmacia = () => {
         className="input1"
       />
       
-      <label className="label1">Correo Electrónico:</label>
-      <input
-        placeholder="Correo Electrónico"
-        value={correo}
-        onChange={(e) => setCorreo(e.target.value)}
-        className="input1"
-      />
-
+      <h2 className="subtitle1">Datos Farmacia:</h2>
       <label className="label1">Horas de Farmacia:</label>
       <select
         value={horasFarmacia}
@@ -439,6 +423,9 @@ const RegistroFarmacia = () => {
         </div>
       </div>
 
+      <div className="errorContainer">
+      <label className="error">{error}</label>
+      </div>
       <div className="buttonContainer1">
         <button className="homeButton" onClick={handleMenu}>
           <span className="homeButtonText">Cancelar</span>
