@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Importar useState y useEffect
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Home/Home'; 
 import Turno from './Turno/Turno'; 
@@ -9,18 +9,12 @@ import Contrasenia from './Contrasenia';
 import User from './User/User'; 
 import EditarFarmacia from './ActualizarFarmacia/EditarFarmacia'; 
 
-
-
-
-
-
-
 import './App.css';
 
 function App() {
-  const [farmacias, setFarmacias] = useState([]);  // useState hook
-  const [horas, setHoras] = useState([]);          // useState hook
-  const [selectedFarmacia, setSelectedFarmacia] = useState(null); // useState hook
+  const [farmacias, setFarmacias] = useState([]);  
+  const [horas, setHoras] = useState([]);          
+  const [selectedFarmacia, setSelectedFarmacia] = useState(null); 
 
   useEffect(() => {
     fetch('http://localhost:8082/farmacia/all')
@@ -31,9 +25,7 @@ function App() {
       })
       .catch((error) => console.error('Error fetching farmacias:', error));
   }, []);
-  
 
-  // Función para obtener horas de entrada y salida para una farmacia específica
   const fetchHoras = (id) => {
     console.log('Fetching horas for farmacia ID:', id);
     fetch(`http://localhost:8082/farmacia/${id}/horas`)
@@ -65,15 +57,7 @@ function App() {
         <Route path="/RegistroFarmacia" element={<RegistroFarmacia />} />
         <Route path="/Contrasenia" element={<Contrasenia />} />
         <Route path="/RegistroUsuario" element={<User />} />
-        <Route path="/EditarFarmacia" element={<EditarFarmacia />} />
-
-
-
-
-
-
-
-        {/* Aquí puedes añadir más rutas para otras vistas si lo necesitas */}
+        <Route path="/EditarFarmacia/:id" element={<EditarFarmacia />} /> {/* Ruta con parámetro id */}
       </Routes>
     </Router>
   );

@@ -27,26 +27,27 @@ function Home() {
   };
 
   // Efecto para cargar los detalles de la farmacia seleccionada
-useEffect(() => {
-  const fetchFarmacia = async () => {
-    try {
-        const response = await fetch(`http://localhost:8082/farmacia/cargarfarmacia/${selectedFarmaciaId}`);
-        if (!response.ok) {
+  useEffect(() => {
+    const fetchFarmacia = async () => {
+      try {
+        // Solo realiza el fetch si selectedFarmaciaId es un valor válido (diferente de 0)
+        if (selectedFarmaciaId !== 0) { 
+          const response = await fetch(`http://localhost:8082/farmacia/cargarfarmacia/${selectedFarmaciaId}`);
+          if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          setFarmacia(data);
         }
-        const data = await response.json();
-        setFarmacia(data);
-    } catch (error) {
+      } catch (error) {
         console.error('Error al cargar los detalles de la farmacia:', error);
         alert('Error al cargar la farmacia. Verifica si la farmacia existe.');
-    }
- };
- 
-
-
-  fetchFarmacia();
-}, [selectedFarmaciaId]); // Se ejecuta cuando selectedFarmaciaId cambia
-
+      }
+    };
+  
+    fetchFarmacia();
+  }, [selectedFarmaciaId]); // El useEffect se ejecutará solo cuando selectedFarmaciaId cambie
+  
 
   return (
     <div className="container1">
