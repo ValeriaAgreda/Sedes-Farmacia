@@ -98,10 +98,6 @@ export default function MenuAdmin() {
       <label className="nameLabel2">Nombre:</label>
       <div className="userName2">Ejemplo Nombre</div>
 
-      
-
-
-
       <div className="buttonContainer2">
         <button
           className="button2"
@@ -118,7 +114,10 @@ export default function MenuAdmin() {
           <span className="buttonText2">Editar Datos</span>
         </button>
       </div>
-
+      {/* Mensaje para seleccionar una farmacia */}
+      {!selectedFarmacia && (
+        <p className="errorMessage">Selecciona una farmacia primero.</p>
+      )}
       {/* Confirmación de eliminación lógica */}
       {showConfirm && (
         <div className="confirmationBox">
@@ -135,8 +134,6 @@ export default function MenuAdmin() {
       {/* Mostrar mensaje de éxito o error */}
       {deleted && <p className="successMessage">Farmacia eliminada correctamente.</p>}
       {error && <p className="errorMessage">{error}</p>}
-
-
 
       <label className="busquedaTitle">Lista Farmacias:</label>
       <input
@@ -166,6 +163,8 @@ export default function MenuAdmin() {
           ))}
         </div>
       </div>
+
+      
 
       <button className="bottomButton2">
         <span className="buttonText2">Gestion de Turnos</span>

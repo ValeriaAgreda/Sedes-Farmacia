@@ -96,6 +96,8 @@ const RegistroFarmacia = () => {
 
   const handleSubmit = async () => {
     // Validaciones
+
+    console.log('Valor de horasFarmacia:', horasFarmacia);
     const missingFields = [];
     
     if (!nombreFarmacia) missingFields.push('Nombre Farmacia');
@@ -138,7 +140,8 @@ const RegistroFarmacia = () => {
       primer_apellido: apellidoPaterno,
       segundo_apellido: apellidoMaterno,
       carnet_identidad: ci,
-      celular: celular
+      celular: celular,
+      horario_atencion: horasFarmacia,
     };
 
     console.log("Datos enviados al backend:", farmaciaData);

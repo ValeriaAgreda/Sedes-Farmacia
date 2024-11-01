@@ -8,7 +8,6 @@ const defaultIcon = new L.Icon({
   iconSize: [25, 41], // Ajusta el tamaño según tu imagen
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-
 });
 
 // Función para convertir coordenadas al formato correcto
@@ -18,7 +17,7 @@ const convertCoordinates = (lat, lng) => {
   return [parseFloat(formattedLat), parseFloat(formattedLng)];
 };
 
-const MapViewRegistro = ({ onLocationSelect, initialLat, initialLng }) => {
+const MapView = ({ data, searchTerm, onLocationSelect, initialLat, initialLng }) => {
   const defaultPosition = [-17.3895, -66.1568]; // Coordenadas predeterminadas
   const [selectedPosition, setSelectedPosition] = useState(
     initialLat && initialLng ? convertCoordinates(initialLat, initialLng) : defaultPosition
@@ -60,6 +59,12 @@ const MapViewRegistro = ({ onLocationSelect, initialLat, initialLng }) => {
     }
   }, [initialLat, initialLng]);
 
+  // Filtrado de datos basado en el término de búsqueda
+  const filteredData = data.filter(item => {
+    const propertyToFilter = item.property; // Cambia esto a la propiedad que estás usando para filtrar
+    return propertyToFilter && propertyToFilter.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
     <MapContainer
       center={selectedPosition} // Usar la posición seleccionada o la predeterminada
@@ -84,8 +89,17 @@ const MapViewRegistro = ({ onLocationSelect, initialLat, initialLng }) => {
 
       {/* Mostrar el marcador si hay una posición seleccionada */}
       {selectedPosition && <Marker position={selectedPosition} icon={defaultIcon} />}
+
+      {/* Mostrar marcadores para los datos filtrados */}
+      {filteredData.map(item => (
+        <Marker 
+          key={item.id} 
+          position={[item.latitude, item.longitude]} 
+          icon={defaultIcon} 
+        />
+      ))}
     </MapContainer>
   );
 };
 
-export default MapViewRegistro;
+export default MapView;

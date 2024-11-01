@@ -30,7 +30,7 @@ router.get('/zonas', (req, res) => {
 
 // Ruta para obtener todos los sectores
 router.get('/sectores', (req, res) => {
-  db.query('SELECT id, nombre FROM sector;', (error, rows) => {
+  db.query('SELECT MIN(id) AS id, nombre FROM sector GROUP BY nombre;', (error, rows) => {
     if (error) {
       console.error('Error al obtener los sectores:', error);
       return res.status(500).json({ error: 'Error interno del servidor' });
@@ -41,9 +41,10 @@ router.get('/sectores', (req, res) => {
 
 
 
+
 // Ruta para obtener todas las categorías
 router.get('/categorias', (req, res) => {
-  db.query('SELECT id, nombre FROM categoria;', (error, rows) => {
+  db.query('SELECT MIN(id) AS id, nombre FROM categoria GROUP BY nombre;', (error, rows) => {
     if (error) {
       console.error('Error al obtener las categorías:', error);
       return res.status(500).json({ error: 'Error interno del servidor' });
@@ -51,6 +52,7 @@ router.get('/categorias', (req, res) => {
     res.json(rows);
   });
 });
+
 
 
 //insercion de farmacia si tiene medicamentos controlados
@@ -96,7 +98,8 @@ router.post('/nuevafarmacia', (req, res) => {
       primer_apellido,
       segundo_apellido,
       carnet_identidad,
-      celular
+      celular,
+      horario_atencion // Nuevo campo agregado
     } = req.body;
 
     // Depuración: Imprimir los valores recibidos antes de las validaciones
@@ -105,7 +108,8 @@ router.post('/nuevafarmacia', (req, res) => {
       nombreDueno,
       primer_apellido,
       carnet_identidad,
-      celular
+      celular,
+      horario_atencion
     });
 
     const queryDueno = `
@@ -143,8 +147,9 @@ router.post('/nuevafarmacia', (req, res) => {
           dueno_id, 
           tipo_id, 
           codigo_id, 
-          usuario_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          usuario_id,
+          horario_atencion  
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       `;
 
       const valuesFarmacia = [
@@ -163,7 +168,8 @@ router.post('/nuevafarmacia', (req, res) => {
         dueno_id,  // ID del dueño registrado
         tipo_id,
         codigo_id,
-        2 // Usuario fijo con ID 2
+        2, // Usuario fijo con ID 2
+        horario_atencion // Valor para el nuevo campo
       ];
 
       db.query(queryFarmacia, valuesFarmacia, (error, result) => {
@@ -180,6 +186,7 @@ router.post('/nuevafarmacia', (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor', details: error.message });
   }
 });
+
 
 //update 
 //obtener farmacia 
@@ -245,6 +252,7 @@ router.get('/farmacia_sustancias/:farmacia_id', (req, res) => {
 });
 
 // Ruta para actualizar la farmacia, dueño y sustancias controladas
+// Ruta para actualizar la farmacia, dueño y sustancias controladas
 router.put('/actualizarfarmacia/:id', (req, res) => {
   try {
     const { id } = req.params;
@@ -263,6 +271,7 @@ router.put('/actualizarfarmacia/:id', (req, res) => {
       tipo_id,
       codigo_id,
       imagen,
+      horario_atencion, // Nuevo campo
       nombreDueno,
       primer_apellido,
       segundo_apellido,
@@ -289,16 +298,17 @@ router.put('/actualizarfarmacia/:id', (req, res) => {
       // Paso 2: Actualizar la farmacia
       const imagenBuffer = imagen ? Buffer.from(imagen.split(',')[1], 'base64') : null;
       const queryFarmacia = `
-        UPDATE Farmacia 
-        SET nombre = ?, numero_registro = ?, direccion = ?, latitud = ?, longitud = ?, 
-        fecha_registro = ?, razon_social = ?, nit = ?, zona_id = ?, sector_id = ?, 
-        observaciones = ?, imagen = ?, tipo_id = ?, codigo_id = ? 
-        WHERE id = ?;
-      `;
+  UPDATE Farmacia 
+  SET nombre = ?, numero_registro = ?, direccion = ?, latitud = ?, longitud = ?, 
+  fecha_registro = ?, razon_social = ?, nit = ?, zona_id = ?, sector_id = ?, 
+  observaciones = ?, imagen = ?, tipo_id = ?, codigo_id = ?, horario_atencion = ? 
+  WHERE id = ?;
+`;
+
 
       const valuesFarmacia = [
         nombre, numero_registro, direccion, latitud, longitud, fecha_registro, razon_social, 
-        nit, zona_id, sector_id, observaciones, imagenBuffer, tipo_id, codigo_id, id
+        nit, zona_id, sector_id, observaciones, imagenBuffer, tipo_id, codigo_id, horario_atencion, id  // Incluimos el nuevo campo en los valores
       ];
 
       db.query(queryFarmacia, valuesFarmacia, (error, result) => {
@@ -349,6 +359,7 @@ router.put('/actualizarfarmacia/:id', (req, res) => {
 });
 
 
+
 //eliminacion logica farmacia 
 // Ruta para la eliminación lógica de la farmacia
 router.put('/farmacia/eliminar/:id', (req, res) => {
@@ -396,9 +407,69 @@ router.get('/farmacias-con-sustancias', (req, res) => {
       return res.status(404).json({ error: 'No se encontraron farmacias con sustancias controladas' });
     }
     
+    // Debug: Verificar los resultados
+    console.log('Resultados de la consulta:', rows);
     res.json(rows);
   });
 });
+
+// Ruta para obtener farmacias en turno en un día específico, incluyendo latitud y longitud
+router.get('/turnosDia/:dia', (req, res) => {
+  const { dia } = req.params;
+
+  // Debug: Verificar el valor de 'dia'
+  console.log('Día recibido:', dia); // Imprimir el valor de 'dia' en la consola del servidor
+
+  const query = `
+      SELECT f.nombre , f.latitud, f.longitud ,f.id
+      FROM horas h
+      JOIN farmacia_horas fh ON h.id = fh.hora_id
+      JOIN farmacia f ON fh.farmacia_id = f.id
+      WHERE h.dia_turno = ? AND h.status = 1;
+  `;
+
+  db.query(query, [dia], (error, rows) => {
+    if (error) {
+      console.error('Error fetching pharmacies on duty for the day:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron farmacias para el día especificado' });
+    }
+
+    // Debug: Verificar los resultados
+    console.log('Resultados de la consulta:', rows);
+    res.json(rows);
+  });
+});
+
+// Ruta para obtener farmacias de turno en un día específico
+router.get('/farmacias-de-turno', (req, res) => {
+  const diaConsulta = req.query.dia || moment().format('YYYY-MM-DD'); // Día de consulta por defecto hoy
+
+  db.query(`
+    SELECT f.id, f.nombre, f.latitud, f.longitud
+    FROM farmacia f
+    JOIN horas h ON f.id = h.farmacia_id
+    WHERE f.status = 1 AND h.turno = 1 AND h.dia = ?;
+  `, [diaConsulta], (error, rows) => {
+    if (error) {
+      console.error('Error al obtener farmacias de turno:', error);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron farmacias de turno para este día' });
+    }
+
+    res.json(rows);
+  });
+});
+
+
+
+
 
 // Buscar farmacias por nombre o letras iniciales
 router.get('/buscar-farmacias', (req, res) => {
