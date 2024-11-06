@@ -60,10 +60,13 @@ const MapView = ({ data, searchTerm, onLocationSelect, initialLat, initialLng })
   }, [initialLat, initialLng]);
 
   // Filtrado de datos basado en el término de búsqueda
-  const filteredData = data.filter(item => {
-    const propertyToFilter = item.property; // Cambia esto a la propiedad que estás usando para filtrar
-    return propertyToFilter && propertyToFilter.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  const filteredData = Array.isArray(data)
+  ? data.filter(item => {
+      const propertyToFilter = item.property; // Cambia esto a la propiedad correcta
+      return propertyToFilter && propertyToFilter.toLowerCase().includes(searchTerm.toLowerCase());
+    })
+  : [];
+
 
   return (
     <MapContainer
