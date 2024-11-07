@@ -12,7 +12,14 @@ const EditarFarmacia = () => {
   const [nombreFarmacia, setNombreFarmacia] = useState('');
   const [categoriaEstablecimiento, setCategoriaEstablecimiento] = useState({});
   const [nroResolucion, setNroResolucion] = useState('');
+
+
   const [fechaResolucion, setFechaResolucion] = useState('');
+
+
+  
+
+  
   const [zona, setZona] = useState({});
   const [codigozona, setCodigoZona] = useState({});
   const [sector, setSector] = useState({});
@@ -50,7 +57,16 @@ useEffect(() => {
       // Asignar datos de la farmacia con valores por defecto
       setNombreFarmacia(farmacia.nombre || '');
       setNroResolucion(farmacia.numero_registro || '');
-      setFechaResolucion(farmacia.fecha_registro ? farmacia.fecha_registro.split('T')[0] : '');
+      setHorasFarmacia(farmacia.horario_atencion || '8h'); // Cargar horas de atención
+
+
+      // Obtener la fecha actual en formato YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0];
+
+      // Asignar la fecha de resolución o la fecha de hoy si no existe
+      setFechaResolucion(farmacia.fecha_registro ? farmacia.fecha_registro.split('T')[0] : today);
+
+
       const zonaEncontrada = zonas.find((z) => z.id === farmacia.zona_id) || {};
       const sectorEncontrado = sectores.find((s) => s.id === farmacia.sector_id) || {};
       const categoriaEncontrada = categoriasEstablecimiento.find((c) => c.id === farmacia.tipo_id) || {};
@@ -197,6 +213,7 @@ useEffect(() => {
       latitud,
       longitud,
       fecha_registro: fechaResolucion,
+      horario_atencion: horasFarmacia,
       razon_social: nombre,
       nit,
       zona_id: zona.id,
