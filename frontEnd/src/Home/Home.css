@@ -7,13 +7,13 @@ body {
   padding: 0;
 }
 
-h1, h2{
+h1, h2 {
   font-family: "Spicy Rice", serif;
-  color: #357ABD;
+  color: #D783B5; /* Tono rosado */
   font-weight: 600;
-
 }
-h6{
+
+h6 {
   font-family: 'DynaPuff', Arial, sans-serif;
   font-size: large;
 }
@@ -29,7 +29,7 @@ h6{
 
 /* Título */
 .tituloContainer {
-  background-color: #4a90e2;
+  background-color: #F3A5C3; /* Fondo rosado */
   color: #ffffff;
   text-align: center;
   padding: 50px 80px;
@@ -38,14 +38,13 @@ h6{
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
 /* Estilo de Input */
 input.input1 {
   width: 100%;
   max-width: 400px;
   padding: 10px 15px;
   border-radius: 8px;
-  border: 1px solid #a3c9f9;
+  border: 1px solid #F3A5C3; /* Borde rosado */
   margin: 20px 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -55,7 +54,7 @@ button,
 .custom-btn,
 .btn-primary,
 .loginButton {
-  background-color: #4a90e2;
+  background-color: #D783B5; /* Fondo rosado */
   color: #ffffff;
   border: none;
   padding: 12px 20px;
@@ -65,17 +64,15 @@ button,
   font-weight: bold;
 }
 
-
-
 .custom-bottomButton3:hover {
-  background-color: #357ABD !important;
+  background-color: #B35E8D !important; /* Tono rosado oscuro en hover */
   color: #ffffff !important;
 }
 
 /* Contenedor de Lista */
 .listContainer2 {
   background-color: #ffffff;
-  border: 1px solid #a3c9f9;
+  border: 1px solid #F3A5C3; /* Borde rosado */
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -84,20 +81,20 @@ button,
 
 /* Enlaces */
 a {
-  color: #4a90e2;
+  color: #D783B5; /* Color rosado */
   text-decoration: none;
   font-weight: bold;
 }
 
 a:hover {
-  color: #357ABD;
+  color: #B35E8D; /* Rosado oscuro en hover */
   text-decoration: underline;
 }
 
 .custom-bottomButton3 {
-  background-color: #61bcea !important;
+  background-color: #E89BBF !important; /* Fondo rosado */
   color: #ffffff !important;
-  border: 2px solid #0088cc !important;
+  border: 2px solid #C06995 !important; /* Borde rosado oscuro */
   padding: 12px 20px;
   border-radius: 10px !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -111,11 +108,10 @@ a:hover {
   width: auto;
 }
 
-
 .custom-loginButton {
-  background-color: #61bcea !important;
+  background-color: #E89BBF !important; /* Fondo rosado */
   color: #ffffff !important;
-  border: 2px solid #0088cc !important;
+  border: 2px solid #C06995 !important; /* Borde rosado oscuro */
   padding: 12px 20px;
   border-radius: 10px !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -130,7 +126,7 @@ a:hover {
 
 /* Hover para loginButton */
 .custom-loginButton:hover {
-  background-color: #357ABD !important; /* Azul oscuro en hover */
+  background-color: #B35E8D !important; /* Rosado oscuro en hover */
 }
 
 /* Estilo del texto dentro del botón */
@@ -148,5 +144,3 @@ a:hover {
   max-width: 600px; /* Limita el ancho total */
   margin: 20px 0;
 }
-
-

@@ -27,7 +27,7 @@ export default function Login() {
   };
 
   const handleVolver = () => {
-    navigate('/MenuAdmin'); // Navega a la página anterior
+    navigate('/'); // Navega a la página anterior
   };
  
   // Función para redirigir a la página de recuperación de contraseña
