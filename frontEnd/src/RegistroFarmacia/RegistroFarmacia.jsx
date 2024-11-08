@@ -8,7 +8,7 @@ const RegistroFarmacia = () => {
   const [error, setError] = useState('');
 
   const handleMenu = () => {
-    navigate('/MenuAdmin'); // Redirige a la ruta de MenuAdmin
+    navigate('/MenuAdmin');
   };
 
   // Estados para los datos de los pickers
@@ -49,7 +49,7 @@ const RegistroFarmacia = () => {
   const [correo, setCorreo] = useState('');
 
   const [horasFarmacia, setHorasFarmacia] = useState('8h');
-  const [tipoFarmacia, setTipoFarmacia] = useState('Farmacia Privada');
+  const [tipoFarmacia, setTipoFarmacia] = useState('Privada');
   const [obs, setObs] = useState('');
   const [medicamentosControlados, setMedicamentosControlados] = useState('');
   const [fileBase64, setFileBase64] = useState(null);
@@ -96,6 +96,8 @@ const RegistroFarmacia = () => {
 
   const handleSubmit = async () => {
     // Validaciones
+
+    console.log('Valor de horasFarmacia:', horasFarmacia);
     const missingFields = [];
     
     if (!nombreFarmacia) missingFields.push('Nombre Farmacia');
@@ -106,8 +108,8 @@ const RegistroFarmacia = () => {
     if (!apellidoMaterno) missingFields.push('Apellido Materno');
     if (!ci) missingFields.push('Carnet de Identidad');
     if (!nit) missingFields.push('NIT');
+    
     if (!celular) missingFields.push('Celular');
-    if (!obs) missingFields.push('Observaciones');
     if (!medicamentosControlados) missingFields.push('Selecciona Medicamentos Controlados');
     if (!fileBase64) missingFields.push('Imagen (debe cargarse un archivo)');
     if (latitud === null || longitud === null) missingFields.push('Ubicación (debe hacer doble clic en el mapa)');
@@ -129,16 +131,17 @@ const RegistroFarmacia = () => {
       razon_social: nombre,
       nit: nit,
       zona_id: zona.id,
-      sector_id: sector.id,
-      observaciones: obs,
-      tipo_id: categoriaEstablecimiento.id,
-      codigo_id: codigozona.id,
+      
+      tipo: tipoFarmacia,
+      
+      codigo_id: codigozona.id || 1,
       imagen: fileBase64,
       nombreDueno: nombre,
       primer_apellido: apellidoPaterno,
       segundo_apellido: apellidoMaterno,
       carnet_identidad: ci,
-      celular: celular
+      celular: celular,
+      horario_atencion: horasFarmacia,
     };
 
     console.log("Datos enviados al backend:", farmaciaData);
@@ -160,9 +163,50 @@ const RegistroFarmacia = () => {
         const result = JSON.parse(responseData);
         const farmaciaId = result.id;
 
-        if (medicamentosControlados === 'Si') {
+        if (medicamentosControlados === 'Estupefacientes') {
           const sustanciasData = {
-            farmacia_id: farmaciaId
+            farmacia_id: farmaciaId,
+            sustancia_id: 1
+          };
+
+          const sustanciasResponse = await fetch('http://localhost:8082/farmacia/farmacia_sustancias', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sustanciasData)
+          });
+
+          if (sustanciasResponse.ok) {
+            console.log('Relación de farmacia con sustancias controladas registrada');
+          } else {
+            console.error('Error al registrar la relación en farmacia_sustancias');
+          }
+        }
+        if (medicamentosControlados === 'Psicotrópicos') {
+          const sustanciasData = {
+            farmacia_id: farmaciaId,
+            sustancia_id: 2
+          };
+
+          const sustanciasResponse = await fetch('http://localhost:8082/farmacia/farmacia_sustancias', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sustanciasData)
+          });
+
+          if (sustanciasResponse.ok) {
+            console.log('Relación de farmacia con sustancias controladas registrada');
+          } else {
+            console.error('Error al registrar la relación en farmacia_sustancias');
+          }
+        }
+        if (medicamentosControlados === 'Ambos') {
+          const sustanciasData = {
+            farmacia_id: farmaciaId,
+            sustancia_id: 3
           };
 
           const sustanciasResponse = await fetch('http://localhost:8082/farmacia/farmacia_sustancias', {
@@ -181,7 +225,7 @@ const RegistroFarmacia = () => {
         }
 
         alert('Farmacia registrada exitosamente con ID: ' + farmaciaId);
-        navigate('/menu-admin');
+        navigate('/MenuAdmin');
       } else {
         alert('Error al registrar la farmacia');
       }
@@ -210,19 +254,7 @@ const RegistroFarmacia = () => {
         className="input1"
       />
       
-      <label className="label1">Categoría de Establecimiento:</label>
-<select
-  value={categoriaEstablecimiento.id} // Seleccionas por id
-  onChange={(e) => {
-    const selectedCategoria = categoriasEstablecimiento.find(c => c.id === parseInt(e.target.value));
-    setCategoriaEstablecimiento(selectedCategoria); // Guardas el objeto completo
-  }}
-  className="picker1"
->
-  {categoriasEstablecimiento.map((cat) => (
-    <option key={cat.id} value={cat.id}>{cat.nombre}</option> // El valor es el id, pero se muestra el nombre
-  ))}
-</select>
+      
       
       <label className="label1">Nro Resolución:</label>
       <input
@@ -275,19 +307,7 @@ const RegistroFarmacia = () => {
 
       
       
-      <label className="label1">Sector:</label>
-<select
-  value={sector.id} // Seleccionas por id
-  onChange={(e) => {
-    const selectedSector = sectores.find(s => s.id === parseInt(e.target.value));
-    setSector(selectedSector); // Guardas el objeto completo con el id y nombre
-  }}
-  className="picker1"
->
-  {sectores.map((sector) => (
-    <option key={sector.id} value={sector.id}>{sector.nombre}</option> // El valor es el id, pero se muestra el nombre
-  ))}
-</select>
+      
       
       <label className="label1">Dirección:</label>
       <input
@@ -387,41 +407,58 @@ const RegistroFarmacia = () => {
         onChange={(e) => setTipoFarmacia(e.target.value)}
         className="picker1"
       >
-        <option value="Farmacia Privada">Farmacia Privada</option>
-        <option value="Farmacia Pública">Farmacia Pública</option>
+        <option value="Privada">Privada</option>
+        <option value="Pública">Pública</option>
+        <option value="Seguridad Social">Seguridad Social</option>
+        <option value="Distribuidora de Medicamentos">Distribuidora de Medicamentos</option>
       </select>
       
-      <label className="label1">Observaciones:</label>
-      <input
-        placeholder="OBS"
-        value={obs}
-        onChange={(e) => setObs(e.target.value)}
-        className="input1"
-      />
+      
 
       <div className="checkboxContainer11">
-        <div className="checkboxContainer1">
-          <label className="label1">Medicamentos Controlados</label>
-          <div className="checkboxWrapper1">
-            <input
-              type="checkbox"
-              checked={medicamentosControlados === 'Si'}
-              onChange={() => setMedicamentosControlados(medicamentosControlados === 'Si' ? 'No' : 'Si')}
-              className="checkbox1"
-            />
-            <span className="checkboxLabel1">Sí</span>
-          </div>
-          <div className="checkboxWrapper1">
-            <input
-              type="checkbox"
-              checked={medicamentosControlados === 'No'}
-              onChange={() => setMedicamentosControlados(medicamentosControlados === 'No' ? 'Si' : 'No')}
-              className="checkbox1"
-            />
-            <span className="checkboxLabel1">No</span>
-          </div>
-        </div>
-      </div>
+  <div className="checkboxContainer1">
+    <label className="label1">Medicamentos Controlados</label>
+    <div className="checkboxWrapper1">
+      <input
+        type="checkbox"
+        checked={medicamentosControlados === 'Estupefacientes'}
+        onChange={() => setMedicamentosControlados(medicamentosControlados === 'Estupefacientes' ? '' : 'Estupefacientes')}
+        className="checkbox1"
+      />
+      <span className="checkboxLabel1">Estupefacientes</span>
+    </div>
+    <div className="checkboxWrapper1">
+      <input
+        type="checkbox"
+        checked={medicamentosControlados === 'Psicotrópicos'}
+        onChange={() => setMedicamentosControlados(medicamentosControlados === 'Psicotrópicos' ? '' : 'Psicotrópicos')}
+        className="checkbox1"
+      />
+      <span className="checkboxLabel1">Psicotrópicos</span>
+    </div>
+    
+    
+    <div className="checkboxWrapper1">
+      <input
+        type="checkbox"
+        checked={medicamentosControlados === 'Ambos'}
+        onChange={() => setMedicamentosControlados(medicamentosControlados === 'Ambos' ? '' : 'Ambos')}
+        className="checkbox1"
+      />
+      <span className="checkboxLabel1">Ambos</span>
+    </div>
+    <div className="checkboxWrapper1">
+      <input
+        type="checkbox"
+        checked={medicamentosControlados === 'Ninguno'}
+        onChange={() => setMedicamentosControlados(medicamentosControlados === 'Ninguno' ? '' : 'Ninguno')}
+        className="checkbox1"
+      />
+      <span className="checkboxLabel1">Ninguno</span>
+    </div>
+  </div>
+</div>
+
 
       <div className="errorContainer">
       <label className="error">{error}</label>

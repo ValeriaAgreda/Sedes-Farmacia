@@ -112,7 +112,10 @@ export default function MenuAdmin() {
           <span className="buttonText2">Editar Datos</span>
         </button>
       </div>
-
+      {/* Mensaje para seleccionar una farmacia */}
+      {!selectedFarmacia && (
+        <p className="errorMessage">Selecciona una farmacia primero.</p>
+      )}
       {showConfirm && (
         <div className="confirmationBox">
           <p>¿Estás seguro de que deseas eliminar esta farmacia?</p>

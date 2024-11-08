@@ -12,7 +12,14 @@ const EditarFarmacia = () => {
   const [nombreFarmacia, setNombreFarmacia] = useState('');
   const [categoriaEstablecimiento, setCategoriaEstablecimiento] = useState({});
   const [nroResolucion, setNroResolucion] = useState('');
+
+
   const [fechaResolucion, setFechaResolucion] = useState('');
+
+
+  
+
+  
   const [zona, setZona] = useState({});
   const [codigozona, setCodigoZona] = useState({});
   const [sector, setSector] = useState({});
@@ -26,9 +33,10 @@ const EditarFarmacia = () => {
   const [nit, setNit] = useState('');
   const [celular, setCelular] = useState('');
   const [horasFarmacia, setHorasFarmacia] = useState('8h');
-  const [tipoFarmacia, setTipoFarmacia] = useState('Farmacia Privada');
+  const [tipoFarmacia, setTipoFarmacia] = useState('Privada');
   const [observaciones, setObservaciones] = useState(''); 
   const [medicamentosControlados, setMedicamentosControlados] = useState('');
+  const [sustancias, setSustancias] = useState([]);
   const [fileBase64, setFileBase64] = useState(null);
 
   // Estados para los datos de los pickers
@@ -50,7 +58,16 @@ useEffect(() => {
       // Asignar datos de la farmacia con valores por defecto
       setNombreFarmacia(farmacia.nombre || '');
       setNroResolucion(farmacia.numero_registro || '');
-      setFechaResolucion(farmacia.fecha_registro ? farmacia.fecha_registro.split('T')[0] : '');
+      setHorasFarmacia(farmacia.horario_atencion || '8h'); // Cargar horas de atención
+      setTipoFarmacia(farmacia.tipo || 'Privada');
+
+      // Obtener la fecha actual en formato YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0];
+
+      // Asignar la fecha de resolución o la fecha de hoy si no existe
+      setFechaResolucion(farmacia.fecha_registro ? farmacia.fecha_registro.split('T')[0] : today);
+
+
       const zonaEncontrada = zonas.find((z) => z.id === farmacia.zona_id) || {};
       const sectorEncontrado = sectores.find((s) => s.id === farmacia.sector_id) || {};
       const categoriaEncontrada = categoriasEstablecimiento.find((c) => c.id === farmacia.tipo_id) || {};
@@ -71,7 +88,7 @@ useEffect(() => {
       // Verificar si la farmacia tiene sustancias controladas
       const sustanciasResponse = await fetch(`http://localhost:8082/farmacia/farmacia_sustancias/${id}`);
       const sustanciasData = await sustanciasResponse.json();
-      setMedicamentosControlados(sustanciasData.tiene_sustancias ? 'Si' : 'No');
+      //setMedicamentosControlados(sustanciasData.tiene_sustancias ? 'Ambos' : 'Ninguno');
 
       // Convertir imagen desde binario a base64
       if (farmacia.imagen) {
@@ -175,7 +192,6 @@ useEffect(() => {
     if (!ci) missingFields.push('Carnet de Identidad');
     if (!nit) missingFields.push('NIT');
     if (!celular) missingFields.push('Celular');
-    if (!observaciones) missingFields.push('Observaciones');
     if (medicamentosControlados === '') missingFields.push('Selecciona Medicamentos Controlados');
     if (!fileBase64) missingFields.push('Imagen (debe cargarse un archivo)');
     if (latitud === null || longitud === null) missingFields.push('Ubicación (debe hacer doble clic en el mapa)');
@@ -197,12 +213,13 @@ useEffect(() => {
       latitud,
       longitud,
       fecha_registro: fechaResolucion,
+      horario_atencion: horasFarmacia,
       razon_social: nombre,
       nit,
       zona_id: zona.id,
-      sector_id: sector.id,
-      observaciones: observaciones, // Puedes agregar un campo de observaciones si es necesario
-      tipo_id: categoriaEstablecimiento.id,
+      
+      tipo: tipoFarmacia, // Puedes agregar un campo de observaciones si es necesario
+      
       codigo_id: codigozona.id,
       imagen: fileBase64,
       nombreDueno: nombre,
@@ -248,22 +265,7 @@ useEffect(() => {
         className="input1"
       />
 
-      <label className="label1">Categoría de Establecimiento:</label>
-      <select
-        value={categoriaEstablecimiento.id} // Seleccionas por id
-        onChange={(e) => {
-          const selectedCategoria = categoriasEstablecimiento.find((c) => c.id === parseInt(e.target.value));
-          setCategoriaEstablecimiento(selectedCategoria);
-        }}
-        className="picker1"
-      >
-        {categoriasEstablecimiento.map((cat) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.nombre}
-          </option>
-        ))}
-      </select>
-
+      
       <label className="label1">Nro Resolución:</label>
       <input
         placeholder="Nro Resolución"
@@ -314,21 +316,7 @@ useEffect(() => {
         ))}
       </select>
 
-      <label className="label1">Sector:</label>
-      <select
-        value={sector.id}
-        onChange={(e) => {
-          const selectedSector = sectores.find((s) => s.id === parseInt(e.target.value));
-          setSector(selectedSector);
-        }}
-        className="picker1"
-      >
-        {sectores.map((sector) => (
-          <option key={sector.id} value={sector.id}>
-            {sector.nombre}
-          </option>
-        ))}
-      </select>
+      
 
       <label className="label1">Dirección:</label>
       <input
@@ -433,41 +421,56 @@ useEffect(() => {
         onChange={(e) => setTipoFarmacia(e.target.value)}
         className="picker1"
       >
-        <option value="Farmacia Privada">Farmacia Privada</option>
-        <option value="Farmacia Pública">Farmacia Pública</option>
+        <option value="Privada">Privada</option>
+        <option value="Pública">Pública</option>
+        <option value="Seguridad Social">Seguridad Social</option>
+        <option value="Distribuidora de Medicamentos">Distribuidora de Medicamentos</option>
       </select>
 
-      <label className="label1">Observaciones:</label>
-      <input
-        placeholder="Observaciones"
-        value={observaciones}
-        onChange={(e) => setObservaciones(e.target.value)}
-        className="input1"
-      />
+      
 
-      <h2 className="subtitle1">Medicamentos Controlados</h2>
+      
       <div className="checkboxContainer11">
-        <div className="checkboxContainer1">
-          <label className="label1">Medicamentos Controlados</label>
-          <div className="checkboxWrapper1">
-            <input
-              type="checkbox"
-              checked={medicamentosControlados === 'Si'}
-              onChange={() => setMedicamentosControlados('Si')}
-              className="checkbox1"
-            />
-            <span className="checkboxLabel1">Sí</span>
-          </div>
-          <div className="checkboxWrapper1">
-            <input
-              type="checkbox"
-              checked={medicamentosControlados === 'No'}
-              onChange={() => setMedicamentosControlados('No')}
-              className="checkbox1"
-            />
-            <span className="checkboxLabel1">No</span>
-          </div>
-        </div>
+      <div className="checkboxContainer1">
+  <label className="label1">Medicamentos Controlados</label>
+  <div className="checkboxWrapper1">
+    <input
+      type="checkbox"
+      checked={medicamentosControlados === 'Estupefacientes'}
+      onChange={() => setMedicamentosControlados('Estupefacientes')}
+      className="checkbox1"
+    />
+    <span className="checkboxLabel1">Estupefacientes</span>
+  </div>
+  <div className="checkboxWrapper1">
+    <input
+      type="checkbox"
+      checked={medicamentosControlados === 'Psicotrópicos'}
+      onChange={() => setMedicamentosControlados('Psicotrópicos')}
+      className="checkbox1"
+    />
+    <span className="checkboxLabel1">Psicotrópicos</span>
+  </div>
+  <div className="checkboxWrapper1">
+    <input
+      type="checkbox"
+      checked={medicamentosControlados === 'Ambos'}
+      onChange={() => setMedicamentosControlados('Ambos')}
+      className="checkbox1"
+    />
+    <span className="checkboxLabel1">Ambos</span>
+  </div>
+  <div className="checkboxWrapper1">
+    <input
+      type="checkbox"
+      checked={medicamentosControlados === 'Ninguno'}
+      onChange={() => setMedicamentosControlados('Ninguno')}
+      className="checkbox1"
+    />
+    <span className="checkboxLabel1">Ninguno</span>
+  </div>
+</div>
+
       </div>
 
 
