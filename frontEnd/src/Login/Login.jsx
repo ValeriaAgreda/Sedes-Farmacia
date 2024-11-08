@@ -25,6 +25,10 @@ export default function Login() {
       }
     }
   };
+
+  const handleVolver = () => {
+    navigate('/MenuAdmin'); // Navega a la página anterior
+  };
  
   // Función para redirigir a la página de recuperación de contraseña
   const handleForgotPassword = () => {
@@ -38,7 +42,7 @@ export default function Login() {
       <label className="label">Usuario</label>
       <input
         className="input"
-        placeholder="nombre ejemplo"
+        placeholder=""
         value={user}
         onChange={(e) => setUser(e.target.value)} // Actualiza el estado del usuario
       />
@@ -46,7 +50,7 @@ export default function Login() {
       <label className="label">Contraseña</label>
       <input
         className="input"
-        placeholder="****"
+        placeholder=""
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)} // Actualiza el estado de la contraseña
@@ -62,6 +66,9 @@ export default function Login() {
       <button className="loginButton" onClick={handleLogin}>
         <span className="loginButtonText">Iniciar sesión</span>
       </button>
+
+      <button className="volver-btn" onClick={handleVolver}>Volver</button>
+
     </div>
   );
 }

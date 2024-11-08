@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+
 import axios from 'axios';
 import './User.css'; // Importar el archivo CSS
  
 const Usuarios = () => {
+  const navigate = useNavigate();
+
   const [usuarios, setUsuarios] = useState([]);
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
@@ -20,6 +24,9 @@ const Usuarios = () => {
     }
   };
  
+  const handleVolver = () => {
+    navigate('/MenuAdmin'); // Navega a la página anterior
+  };
   useEffect(() => {
     fetchUsuarios();
   }, []);
@@ -124,6 +131,8 @@ const Usuarios = () => {
           </li>
         ))}
       </ul>
+      <button className="volver-btn" onClick={handleVolver}>Volver</button>
+
     </div>
   );
 };

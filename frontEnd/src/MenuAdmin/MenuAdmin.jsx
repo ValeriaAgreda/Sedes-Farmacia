@@ -96,9 +96,6 @@ export default function MenuAdmin() {
     <div className="container2">
       <h1 className="title2">Menu</h1>
 
-      <label className="nameLabel2">Nombre:</label>
-      <div className="userName2">Ejemplo Nombre</div>
-
       <div className="buttonContainer2">
         <button
           className="button2"

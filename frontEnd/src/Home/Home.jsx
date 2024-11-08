@@ -68,22 +68,22 @@ function Home() {
       />
 
 
-          
-          <button className="bottomButton3" onClick={() => setFilter('abiertas')}>
+      
+      <div className='container12'>
+    
+      <button className="custom-bottomButton3" onClick={() => setFilter('abiertas')}>
         <span className="buttonText2">Farmacias Legalmente Autorizadas</span>
       </button>
 
 
 
-        <button className="bottomButton3" onClick={() => setFilter('sustancias')}>
-        <span className="buttonText2">Farmacias Autorizadas para Dispensar Medicamentos Controlados</span>
+        <button className="custom-bottomButton3" onClick={() => setFilter('sustancias')}>
+        <span className="buttonText2">Medicamentos Controlados</span>
       </button>
 
-      <button className="bottomButton3" >
+      <button className="custom-bottomButton3" >
         <span className="buttonText2">Farmacias de Turno</span>
       </button>
-      <div className='container12'>
-
       </div>
 
       
@@ -98,11 +98,6 @@ function Home() {
          <div className='container12'>
 
       </div>
-        
-      <button className="loginButton">
-        <span className="loginButtonText">Actualizar Ubicación</span>
-      </button>
-      
 
       {farmacia && (
     <div className="listContainer2" style={{ padding: '20px', width:"550px" }}>
@@ -145,7 +140,7 @@ function Home() {
 
       <div className="container1">
       <p>¿Tienes una Cuenta?</p>
-        <button className="loginButton" onClick={handleHome} style={{width:"200px"}}>
+        <button className="custom-loginButton" onClick={handleHome} style={{width:"200px"}}>
           <span className="loginButtonText">Iniciar Session</span>
         </button>
       </div>

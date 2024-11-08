@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 import './Turno.css';
 
 const Turno = () => {
+  const navigate = useNavigate();
   const [farmacias, setFarmacias] = useState([]);
   const [filtroZona, setFiltroZona] = useState('');
   const [filtroMes, setFiltroMes] = useState('');
@@ -29,6 +31,10 @@ const Turno = () => {
 
   const handleFiltroMesChange = (e) => {
     setFiltroMes(e.target.value);
+  };
+
+  const handleVolver = () => {
+    navigate('/MenuAdmin'); // Navega a la página anterior
   };
 
   const handleCargarTurnos = async () => {
@@ -214,6 +220,9 @@ const Turno = () => {
           )}
         </tbody>
       </table>
+
+      <button className="volver-btn" onClick={handleVolver}>Volver</button>
+    
     </div>
   );
 };
