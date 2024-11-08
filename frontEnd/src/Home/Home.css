@@ -1,146 +1,145 @@
-/* Aplica DynaPuff como fuente general en todo el proyecto */
 body {
-  font-family: 'DynaPuff', Arial, sans-serif;
-  background: #ffffff;
-  color: #333;
-  margin: 0;
-  padding: 0;
-}
-
-h1, h2 {
-  font-family: "Spicy Rice", serif;
-  color: #D783B5; /* Tono rosado */
-  font-weight: 600;
-}
-
-h6 {
-  font-family: 'DynaPuff', Arial, sans-serif;
-  font-size: large;
-}
-
-/* Contenedor Principal */
-.container1 {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  width: 100%;
-  padding: 20px;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5; 
 }
 
-/* Título */
-.tituloContainer {
-  background-color: #F3A5C3; /* Fondo rosado */
-  color: #ffffff;
+.tituloContainer{
+  color: #FBFBFB;
   text-align: center;
-  padding: 50px 80px;
-  border-radius: 20px;
-  margin-bottom: 30px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 35px;
+  background-color: #393939;
+  border-top-right-radius: 60px;
+  border-top-left-radius: 60px;
+  border-bottom-right-radius: 100px;
+  border-bottom-left-radius: 100px;
+  padding: 70px;
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
-/* Estilo de Input */
-input.input1 {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: 1px solid #F3A5C3; /* Borde rosado */
-  margin: 20px 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+h1 {
+  font-size: 2rem;
+  color: #333;
 }
 
-/* Estilo Unificado para Todos los Botones */
-button,
-.custom-btn,
-.btn-primary,
-.loginButton {
-  background-color: #D783B5; /* Fondo rosado */
-  color: #ffffff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
-  font-weight: bold;
+p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
 }
 
-.custom-bottomButton3:hover {
-  background-color: #B35E8D !important; /* Tono rosado oscuro en hover */
-  color: #ffffff !important;
-}
-
-/* Contenedor de Lista */
-.listContainer2 {
-  background-color: #ffffff;
-  border: 1px solid #F3A5C3; /* Borde rosado */
-  border-radius: 8px;
+header {
+  background-color: #eaeaea;
   padding: 20px;
+  border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
-/* Enlaces */
-a {
-  color: #D783B5; /* Color rosado */
-  text-decoration: none;
+.custom-btn,
+.btn-primary {
+  background-color: #ff5e78 !important;  
+  border-color: #ff5e78 !important;      
+  color: white !important;            
+}
+
+.custom-btn:hover,
+.btn-primary:hover {
+  background-color: #ff708a !important;  
+  border-color: #ff708a !important;
+}
+
+.custom-btn-outline,
+.btn-outline-primary {
+  background-color: white !important;
+  border-color: #ff5e78 !important;     
+  color: #ff5e78 !important;            
+}
+
+.custom-btn-outline:hover,
+.btn-outline-primary:hover {
+  background-color: #ff708a !important; 
+  color: white !important;             
+  border-color: #ff708a !important;
+}
+
+.container12 {
+  margin: 10px;
+}
+
+
+
+.farmacia-details {
+  padding: 20px;
+  background-color: #fff;
+  border: 2px solid #ff5e78;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center; 
+  margin-bottom: 1.5rem;
+}
+
+.farmacia-details h3 {
+  color: #333;
   font-weight: bold;
+}
+
+.farmacia-details .text-success {
+  color: #28a745 !important;
+}
+
+.farmacia-details .text-danger {
+  color: #ff5e78 !important;
+}
+
+.centered-list {
+  list-style-type: none;
+  padding-left: 0;
+  text-align: center;  
+}
+
+ul li {
+  margin-bottom: 0.5rem;
+}
+
+a {
+  color: #ff5e78;
+  text-decoration: none;
 }
 
 a:hover {
-  color: #B35E8D; /* Rosado oscuro en hover */
+  color: #ff708a;
   text-decoration: underline;
 }
 
-.custom-bottomButton3 {
-  background-color: #E89BBF !important; /* Fondo rosado */
-  color: #ffffff !important;
-  border: 2px solid #C06995 !important; /* Borde rosado oscuro */
-  padding: 12px 20px;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
-  font-weight: bold;
-  cursor: pointer;
-  flex: 1;
-  margin: 0 5px;
+footer {
+  background-color: #eaeaea;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  font-size: small;
-  width: auto;
 }
 
-.custom-loginButton {
-  background-color: #E89BBF !important; /* Fondo rosado */
-  color: #ffffff !important;
-  border: 2px solid #C06995 !important; /* Borde rosado oscuro */
-  padding: 12px 20px;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
-  font-weight: bold;
-  cursor: pointer;
-  text-align: center;
-  width: 200px;
-  font-size: 16px;
-  margin: 10px 0;
+button {
+  margin: 10px;
 }
 
-/* Hover para loginButton */
-.custom-loginButton:hover {
-  background-color: #B35E8D !important; /* Rosado oscuro en hover */
+.leaflet-marker-icon {
+  background-image: url('/leaflet/marker-icon.png');
 }
 
-/* Estilo del texto dentro del botón */
-.loginButtonText {
-  color: #ffffff !important; /* Forzar blanco en el texto */
-  font-size: 16px;
-  font-weight: bold;
+.leaflet-marker-icon.leaflet-marker-icon-2x {
+  background-image: url('/leaflet/marker-icon-2x.png');
 }
 
-/* Contenedor para alinear los tres botones en una fila */
-.container12 {
-  display: flex;
-  justify-content: space-between; /* Distribuye espacio entre los botones */
-  width: 100%; /* Asegura que ocupe el ancho completo */
-  max-width: 600px; /* Limita el ancho total */
-  margin: 20px 0;
+.leaflet-marker-shadow {
+  background-image: url('/leaflet/marker-shadow.png');
 }
