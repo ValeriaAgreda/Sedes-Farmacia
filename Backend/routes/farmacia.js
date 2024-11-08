@@ -58,14 +58,14 @@ router.get('/categorias', (req, res) => {
 //insercion de farmacia si tiene medicamentos controlados
 // Ruta para insertar la relación entre farmacia y sustancias controladas
 router.post('/farmacia_sustancias', (req, res) => {
-  const { farmacia_id } = req.body;
+  const { farmacia_id, sustancia_id } = req.body;
 
   const query = `
     INSERT INTO farmacia_sustancias (farmacia_id, sustancia_id) 
     VALUES (?, ?);
   `;
 
-  const values = [farmacia_id, 1]; // Aquí puedes ajustar el `sustancia_id` si necesitas más lógica
+  const values = [farmacia_id, sustancia_id]; // Usamos el sustancia_id dinámico recibido desde el frontend
 
   db.query(query, values, (error, result) => {
     if (error) {
@@ -76,7 +76,7 @@ router.post('/farmacia_sustancias', (req, res) => {
   });
 });
 
-//registra nueva farmacia y dueno asignandole su id del dueno a la farmacia
+
 router.post('/nuevafarmacia', (req, res) => {
   try {
     const {
@@ -89,9 +89,7 @@ router.post('/nuevafarmacia', (req, res) => {
       razon_social,
       nit,
       zona_id,
-      sector_id,
-      observaciones,
-      tipo_id,
+      tipo,  // Nuevo campo tipo
       codigo_id,
       imagen,
       nombreDueno,
@@ -99,7 +97,7 @@ router.post('/nuevafarmacia', (req, res) => {
       segundo_apellido,
       carnet_identidad,
       celular,
-      horario_atencion // Nuevo campo agregado
+      horario_atencion // Campo ya existente
     } = req.body;
 
     // Depuración: Imprimir los valores recibidos antes de las validaciones
@@ -109,7 +107,8 @@ router.post('/nuevafarmacia', (req, res) => {
       primer_apellido,
       carnet_identidad,
       celular,
-      horario_atencion
+      horario_atencion,
+      tipo  // Log del nuevo campo
     });
 
     const queryDueno = `
@@ -141,15 +140,13 @@ router.post('/nuevafarmacia', (req, res) => {
           razon_social, 
           nit, 
           zona_id, 
-          sector_id, 
-          observaciones, 
+          tipo,  
           imagen, 
           dueno_id, 
-          tipo_id, 
           codigo_id, 
           usuario_id,
           horario_atencion  
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       `;
 
       const valuesFarmacia = [
@@ -162,11 +159,9 @@ router.post('/nuevafarmacia', (req, res) => {
         razon_social,
         nit,
         zona_id,
-        sector_id,
-        observaciones,
+        tipo,  // Valor para el nuevo campo tipo
         imagenBuffer,
         dueno_id,  // ID del dueño registrado
-        tipo_id,
         codigo_id,
         2, // Usuario fijo con ID 2
         horario_atencion // Valor para el nuevo campo
@@ -186,6 +181,7 @@ router.post('/nuevafarmacia', (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor', details: error.message });
   }
 });
+
 
 
 //update 
@@ -235,21 +231,28 @@ router.get('/farmacia_sustancias/:farmacia_id', (req, res) => {
   const { farmacia_id } = req.params;
 
   const query = `
-    SELECT COUNT(*) as count 
-    FROM farmacia_sustancias 
-    WHERE farmacia_id = ?;
+    SELECT sustancia_id
+    FROM farmacia_sustancias
+    WHERE farmacia_id = ?
+    LIMIT 1;  
   `;
 
   db.query(query, [farmacia_id], (error, result) => {
     if (error) {
-      console.error('Error al verificar farmacia_sustancias:', error);
-      return res.status(500).json({ error: 'Error interno del servidor al verificar la relación' });
+      console.error('Error al obtener sustancia para la farmacia:', error);
+      return res.status(500).json({ error: 'Error interno del servidor al obtener la sustancia' });
     }
 
-    const hasSustancias = result[0].count > 0;
-    res.status(200).json({ tiene_sustancias: hasSustancias });
+    // Si no se encuentra ninguna sustancia, podemos devolver una respuesta vacía o un mensaje adecuado
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'No se encontró sustancia para esta farmacia' });
+    }
+
+    // Devolvemos el primer sustancia_id encontrado
+    res.status(200).json({ sustancia_id: result[0].sustancia_id });
   });
 });
+
 
 // Ruta para actualizar la farmacia, dueño y sustancias controladas
 // Ruta para actualizar la farmacia, dueño y sustancias controladas
@@ -266,12 +269,10 @@ router.put('/actualizarfarmacia/:id', (req, res) => {
       razon_social,
       nit,
       zona_id,
-      sector_id,
-      observaciones,
-      tipo_id,
+      tipo,  // Nuevo campo tipo
       codigo_id,
       imagen,
-      horario_atencion, // Nuevo campo
+      horario_atencion, // Campo ya existente
       nombreDueno,
       primer_apellido,
       segundo_apellido,
@@ -298,17 +299,17 @@ router.put('/actualizarfarmacia/:id', (req, res) => {
       // Paso 2: Actualizar la farmacia
       const imagenBuffer = imagen ? Buffer.from(imagen.split(',')[1], 'base64') : null;
       const queryFarmacia = `
-  UPDATE Farmacia 
-  SET nombre = ?, numero_registro = ?, direccion = ?, latitud = ?, longitud = ?, 
-  fecha_registro = ?, razon_social = ?, nit = ?, zona_id = ?, sector_id = ?, 
-  observaciones = ?, imagen = ?, tipo_id = ?, codigo_id = ?, horario_atencion = ? 
-  WHERE id = ?;
-`;
-
+        UPDATE Farmacia 
+        SET nombre = ?, numero_registro = ?, direccion = ?, latitud = ?, longitud = ?, 
+        fecha_registro = ?, razon_social = ?, nit = ?, zona_id = ?, 
+        tipo = ?, 
+        imagen = ?, codigo_id = ?, horario_atencion = ? 
+        WHERE id = ?;
+      `;
 
       const valuesFarmacia = [
         nombre, numero_registro, direccion, latitud, longitud, fecha_registro, razon_social, 
-        nit, zona_id, sector_id, observaciones, imagenBuffer, tipo_id, codigo_id, horario_atencion, id  // Incluimos el nuevo campo en los valores
+        nit, zona_id, tipo, imagenBuffer, codigo_id, horario_atencion, id  // Incluimos el nuevo campo en los valores
       ];
 
       db.query(queryFarmacia, valuesFarmacia, (error, result) => {
@@ -318,22 +319,92 @@ router.put('/actualizarfarmacia/:id', (req, res) => {
         }
 
         // Paso 3: Actualizar las sustancias controladas
-        if (medicamentosControlados === 'Si') {
-          const querySustancias = `
-            INSERT INTO farmacia_sustancias (farmacia_id, sustancia_id) 
-            VALUES (?, 1)
-            ON DUPLICATE KEY UPDATE sustancia_id = 1;
+        if (medicamentosControlados == 'Estupefacientes') {
+          // Primero eliminar los registros existentes con el mismo farmacia_id
+          const deleteQuery = `
+            DELETE FROM farmacia_sustancias WHERE farmacia_id = ?;
           `;
-
-          db.query(querySustancias, [id], (error, result) => {
-            if (error) {
-              console.error('Error al actualizar las sustancias controladas:', error);
-              return res.status(500).json({ error: 'Error interno del servidor al actualizar las sustancias' });
+        
+          db.query(deleteQuery, [id], (deleteError, deleteResult) => {
+            if (deleteError) {
+              console.error('Error al eliminar las sustancias controladas existentes:', deleteError);
+              return res.status(500).json({ error: 'Error interno del servidor al eliminar las sustancias' });
             }
-
-            res.status(200).json({ message: 'Farmacia y datos actualizados exitosamente' });
+        
+            // Luego insertar el nuevo registro
+            const querySustancias = `
+              INSERT INTO farmacia_sustancias (farmacia_id, sustancia_id) 
+              VALUES (?, 1);
+            `;
+        
+            db.query(querySustancias, [id], (insertError, insertResult) => {
+              if (insertError) {
+                console.error('Error al insertar la nueva sustancia controlada:', insertError);
+                return res.status(500).json({ error: 'Error interno del servidor al insertar las sustancias' });
+              }
+        
+              res.status(200).json({ message: 'Farmacia y datos actualizados exitosamente' });
+            });
           });
-        } else if (medicamentosControlados === 'No') {
+        } 
+        else if (medicamentosControlados == 'Psicotrópicos') {
+          // Primero eliminar los registros existentes con el mismo farmacia_id
+          const deleteQuery = `
+            DELETE FROM farmacia_sustancias WHERE farmacia_id = ?;
+          `;
+        
+          db.query(deleteQuery, [id], (deleteError, deleteResult) => {
+            if (deleteError) {
+              console.error('Error al eliminar las sustancias controladas existentes:', deleteError);
+              return res.status(500).json({ error: 'Error interno del servidor al eliminar las sustancias' });
+            }
+        
+            // Luego insertar el nuevo registro
+            const querySustancias = `
+              INSERT INTO farmacia_sustancias (farmacia_id, sustancia_id) 
+              VALUES (?, 2);
+            `;
+        
+            db.query(querySustancias, [id], (insertError, insertResult) => {
+              if (insertError) {
+                console.error('Error al insertar la nueva sustancia controlada:', insertError);
+                return res.status(500).json({ error: 'Error interno del servidor al insertar las sustancias' });
+              }
+        
+              res.status(200).json({ message: 'Farmacia y datos actualizados exitosamente' });
+            });
+          });
+        }
+        else if (medicamentosControlados == 'Ambos') {
+          // Primero eliminar los registros existentes con el mismo farmacia_id
+          const deleteQuery = `
+            DELETE FROM farmacia_sustancias WHERE farmacia_id = ?;
+          `;
+        
+          db.query(deleteQuery, [id], (deleteError, deleteResult) => {
+            if (deleteError) {
+              console.error('Error al eliminar las sustancias controladas existentes:', deleteError);
+              return res.status(500).json({ error: 'Error interno del servidor al eliminar las sustancias' });
+            }
+        
+            // Luego insertar el nuevo registro
+            const querySustancias = `
+              INSERT INTO farmacia_sustancias (farmacia_id, sustancia_id) 
+              VALUES (?, 3);
+            `;
+        
+            db.query(querySustancias, [id], (insertError, insertResult) => {
+              if (insertError) {
+                console.error('Error al insertar la nueva sustancia controlada:', insertError);
+                return res.status(500).json({ error: 'Error interno del servidor al insertar las sustancias' });
+              }
+        
+              res.status(200).json({ message: 'Farmacia y datos actualizados exitosamente' });
+            });
+          });
+        }
+        
+        else if (medicamentosControlados == 'Ninguno') {
           // Eliminar las sustancias controladas asociadas a la farmacia
           const queryEliminarSustancias = `
             DELETE FROM farmacia_sustancias WHERE farmacia_id = ?;
