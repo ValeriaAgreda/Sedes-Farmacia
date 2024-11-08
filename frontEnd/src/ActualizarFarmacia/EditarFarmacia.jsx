@@ -429,7 +429,7 @@ useEffect(() => {
 
       
 
-      <h2 className="subtitle1">Medicamentos Controlados</h2>
+      
       <div className="checkboxContainer11">
       <div className="checkboxContainer1">
   <label className="label1">Medicamentos Controlados</label>

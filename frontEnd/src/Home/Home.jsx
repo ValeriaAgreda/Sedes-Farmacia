@@ -98,9 +98,7 @@ function Home() {
 
       <div className='container12'></div>
         
-      <button className="loginButton" onClick={handleActualizarUbicacion}>
-        <span className="loginButtonText">Actualizar Ubicación</span>
-      </button>
+      
       
       {farmacia && (
   <div className="listContainer2" style={{ padding: '20px', width: "550px" }}>
