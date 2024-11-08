@@ -108,6 +108,7 @@ const RegistroFarmacia = () => {
     if (!apellidoMaterno) missingFields.push('Apellido Materno');
     if (!ci) missingFields.push('Carnet de Identidad');
     if (!nit) missingFields.push('NIT');
+    
     if (!celular) missingFields.push('Celular');
     if (!medicamentosControlados) missingFields.push('Selecciona Medicamentos Controlados');
     if (!fileBase64) missingFields.push('Imagen (debe cargarse un archivo)');
@@ -133,7 +134,7 @@ const RegistroFarmacia = () => {
       
       tipo: tipoFarmacia,
       
-      codigo_id: codigozona.id,
+      codigo_id: codigozona.id || 1,
       imagen: fileBase64,
       nombreDueno: nombre,
       primer_apellido: apellidoPaterno,

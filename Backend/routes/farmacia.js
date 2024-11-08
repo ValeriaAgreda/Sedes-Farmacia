@@ -678,3 +678,28 @@ router.get('/:id/horas', (req, res) => {
 });
 
 module.exports = router;
+
+
+
+
+//ruta para recuperar la lista de numeros que esta en la tabla farmacia-horas
+router.get('/farmacias-duenos-numeros-turno', (req, res) => {
+  // Realizamos una consulta SQL que une las tres tablas
+  const query = `
+    SELECT d.celular
+    FROM farmacia_horas fh
+    INNER JOIN farmacia f ON fh.farmacia_id = f.id
+    INNER JOIN dueno d ON f.dueno_id = d.id
+  `;
+
+  // Ejecutamos la consulta en la base de datos
+  db.query(query, (error, rows) => {
+    if (error) {
+      console.error('Error al obtener los celulares de los dueños:', error);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+
+    // Enviamos los resultados como respuesta
+    res.json(rows);
+  });
+});
