@@ -73,73 +73,6 @@ router.put('/:id', (req, res) => {
 });
 
 // Crear turnos y relaciones con farmacias
-/*router.post('/guardarTurnos', (req, res) => {
-    const { farmacias, mesActual, anioActual } = req.body;
-
-    if (!Array.isArray(farmacias) || farmacias.length === 0) {
-        return res.status(400).json({ error: 'Se requiere un arreglo de farmacias válido' });
-    }
-
-    const totalDiasMes = new Date(anioActual, mesActual, 0).getDate();
-    const totalDiasMesSiguiente = new Date(anioActual, mesActual + 1, 0).getDate();
-    let turnosGenerados = [];
-    let relacionFarmaciaHoras = [];
-    let posicionGlobal = 0;
-    let idUltimaFarmacia = null;
-
-    const generarTurnosParaMes = (diasMes, anio, mes, inicio) => {
-        let colaFarmacias = [...farmacias];
-        for (let i = 0; i < inicio; i++) {
-            colaFarmacias.push(colaFarmacias.shift());
-        }
-
-        for (let dia = 1; dia <= diasMes; dia++) {
-            const farmaciaAsignada = colaFarmacias.shift();
-            const fechaTurno = new Date(anio, mes - 1, dia).toISOString().split('T')[0];
-
-            turnosGenerados.push([
-                `Turno ${dia}`,
-                '08:00:00',
-                '20:00:00',
-                fechaTurno,
-                1,
-                1
-            ]);
-
-            relacionFarmaciaHoras.push({ farmaciaId: farmaciaAsignada.id, fechaTurno });
-            idUltimaFarmacia = farmaciaAsignada.id;
-            posicionGlobal++;
-            colaFarmacias.push(farmaciaAsignada);
-        }
-        return posicionGlobal;
-    };
-
-    posicionGlobal = generarTurnosParaMes(totalDiasMes, anioActual, mesActual, 0);
-    const inicioSegundoMes = farmacias.findIndex(farmacia => farmacia.id === idUltimaFarmacia);
-    generarTurnosParaMes(totalDiasMesSiguiente, anioActual, mesActual + 1, inicioSegundoMes);
-
-    const insertHorasQuery = 'INSERT INTO Horas (nombre, hora_entrada, hora_salida, dia_turno, turno, status) VALUES ?';
-    MysqlConnection.query(insertHorasQuery, [turnosGenerados], (error, horasResult) => {
-        if (error) {
-            return res.status(500).json({ error: 'Error al guardar turnos en Horas', details: error.message });
-        }
-
-        const turnosIds = horasResult.insertId;
-        const relaciones = relacionFarmaciaHoras.map((relacion, index) => [
-            relacion.farmaciaId,
-            turnosIds + index
-        ]);
-
-        const insertRelacionQuery = 'INSERT INTO Farmacia_Horas (farmacia_id, hora_id) VALUES ?';
-        MysqlConnection.query(insertRelacionQuery, [relaciones], (errorRelacion) => {
-            if (errorRelacion) {
-                return res.status(500).json({ error: 'Error al vincular farmacias y turnos', details: errorRelacion.message });
-            }
-            res.json({ message: 'Turnos y relaciones guardados exitosamente' });
-        });
-    });
-}); */
-
 router.post('/guardarTurnos', (req, res) => {
     const { farmacias, mesActual, anioActual } = req.body;
 
@@ -147,43 +80,23 @@ router.post('/guardarTurnos', (req, res) => {
         return res.status(400).json({ error: 'Se requiere un arreglo de farmacias válido' });
     }
 
-    const totalDiasMes = new Date(anioActual, mesActual, 0).getDate();
-    const totalDiasMesSiguiente = new Date(anioActual, mesActual + 1, 0).getDate();
     let turnosGenerados = [];
     let relacionFarmaciaHoras = [];
-    let posicionGlobal = 0;
-    let idUltimaFarmacia = null;
 
-    const generarTurnosParaMes = (diasMes, anio, mes, inicio) => {
-        let colaFarmacias = [...farmacias];
-        for (let i = 0; i < inicio; i++) {
-            colaFarmacias.push(colaFarmacias.shift());
-        }
-
-        for (let dia = 1; dia <= diasMes; dia++) {
-            const farmaciaAsignada = colaFarmacias.shift();
-            const fechaTurno = new Date(anio, mes - 1, dia).toISOString().split('T')[0];
-
-            turnosGenerados.push([
-                `Turno ${dia}`,
-                '08:00:00',
-                '20:00:00',
-                fechaTurno,
-                1,
-                1
-            ]);
-
-            relacionFarmaciaHoras.push({ farmaciaId: farmaciaAsignada.id, fechaTurno });
-            idUltimaFarmacia = farmaciaAsignada.id;
-            posicionGlobal++;
-            colaFarmacias.push(farmaciaAsignada);
-        }
-        return posicionGlobal;
-    };
-
-    posicionGlobal = generarTurnosParaMes(totalDiasMes, anioActual, mesActual, 0);
-    const inicioSegundoMes = farmacias.findIndex(farmacia => farmacia.id === idUltimaFarmacia);
-    generarTurnosParaMes(totalDiasMesSiguiente, anioActual, mesActual + 1, inicioSegundoMes);
+    // Genera turnos en el formato correcto sin arrays anidados
+    farmacias.forEach((farmacia) => {
+        turnosGenerados.push([
+            farmacia.nombre,
+            farmacia.hora_entrada,
+            farmacia.hora_salida,
+            farmacia.dia_turno,
+            farmacia.turno,
+            1 // status
+        ]);
+        
+        // Almacena las relaciones en el formato correcto para evitar duplicados
+        relacionFarmaciaHoras.push([farmacia.id, null]); // 'null' se usará para el id de la hora que se asignará más adelante
+    });
 
     const insertHorasQuery = 'INSERT INTO Horas (nombre, hora_entrada, hora_salida, dia_turno, turno, status) VALUES ?';
     MysqlConnection.query(insertHorasQuery, [turnosGenerados], (error, horasResult) => {
@@ -191,19 +104,15 @@ router.post('/guardarTurnos', (req, res) => {
             return res.status(500).json({ error: 'Error al guardar turnos en Horas', details: error.message });
         }
 
-        const turnosIds = horasResult.insertId;
-        const relaciones = relacionFarmaciaHoras.map((relacion, index) => [
-            relacion.farmaciaId,
-            turnosIds + index
+        // Obtener el primer ID insertado y asignar los ids correspondientes
+        const firstId = horasResult.insertId;
+        relacionFarmaciaHoras = relacionFarmaciaHoras.map((relacion, index) => [
+            relacion[0], // farmacia_id
+            firstId + index // hora_id
         ]);
 
-        // Nueva consulta para insertar relaciones sin duplicados
-        const insertRelacionQuery = `
-            INSERT INTO Farmacia_Horas (farmacia_id, hora_id) VALUES ?
-            ON DUPLICATE KEY UPDATE hora_id = VALUES(hora_id)
-        `;
-        
-        MysqlConnection.query(insertRelacionQuery, [relaciones], (errorRelacion) => {
+        const insertRelacionQuery = 'INSERT INTO Farmacia_Horas (farmacia_id, hora_id) VALUES ?';
+        MysqlConnection.query(insertRelacionQuery, [relacionFarmaciaHoras], (errorRelacion) => {
             if (errorRelacion) {
                 return res.status(500).json({ error: 'Error al vincular farmacias y turnos', details: errorRelacion.message });
             }
