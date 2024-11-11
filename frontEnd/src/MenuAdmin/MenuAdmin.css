@@ -1,4 +1,5 @@
-/* MenuAdmin.css */
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Sixtyfour+Convergence&family=Spicy+Rice&display=swap');
+
 .container2 {
   display: flex;
   justify-content: center;
@@ -6,8 +7,8 @@
   flex-direction: column;
   padding: 0;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5; 
+  font-family: 'DynaPuff', sans-serif;
+  background-color: #f0f4f8;
 }
 
 .title2 {
@@ -16,14 +17,15 @@
   margin-bottom: 30px;
   text-align: center;
   padding: 10px;
-  color: black;
+  color: #070707;
+  font-family: 'Spicy Rice', sans-serif;
 }
 
 .nameLabel2 {
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  color: black;
+  color: #333;
 }
 
 .userName2 {
@@ -32,6 +34,7 @@
   padding-top: 10px;
   padding-bottom: 30px;
   text-align: center;
+  font-family: 'DynaPuff', sans-serif;
 }
 
 .buttonContainer2 {
@@ -42,31 +45,35 @@
 }
 
 .button2 {
-  background-color: #F44C7F;
-  padding: 10px;
-  border-radius: 10px;
-  width: 170px;
-  height: 50px;
-  display: flex;
-  border: 3px solid #F44C7F;
-  justify-content: center;
-  align-items: center;
+  background-color: #ff5e78 !important;
+  padding: 10px !important;
+  border-radius: 10px !important;
+  width: 170px !important;
+  height: 50px !important;
+  display: flex !important;
+  border: 3px solid #ff5e78 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 .buttonText2 {
-  color: #fff;
-  font-weight: bold;
+  color: white !important;
+  font-weight: bold !important;
+  font-family: 'DynaPuff', sans-serif;
 }
 
 .button2:hover {
-  border-color: #F44C7F; 
-  background-color: #fff;
+  background-color: #fff !important;
+  border-color: #ff5e78 !important;
+  transform: scale(1.05) !important;
 }
 
 .button2:hover .buttonText2 {
-  color: #F44C7F; 
+  color: #ff5e78 !important;
 }
-
 
 .listContainer2 {
   height: auto;
@@ -74,39 +81,39 @@
   border: 1px solid #808080;
   margin-top: 10px;
   margin-bottom: 50px;
-  border-radius: 10px; /* Bordes redondeados en todo el contenedor */
-  overflow: hidden; /* Asegura que los bordes redondeados se apliquen bien */
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
 }
 
-/* Asegurarse de que la lista tenga scroll si es necesario */
 .list {
-  max-height: 300px; /* Ajusta la altura según tus necesidades */
-  overflow-y: auto;  /* Habilitar el scroll vertical */
+  max-height: 300px;
+  overflow-y: auto;
   margin-top: 10px;
 }
-.busquedaTitle{
+
+.busquedaTitle {
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  color: black;
+  color: #333;
   margin-top: 20px;
   margin-bottom: 20px;
+  font-family: 'DynaPuff', sans-serif;
 }
-/* Asegura que los elementos de la lista se alineen bien, incluso con texto largo */
+
 .listItem2 {
   display: flex;
   justify-content: space-between;
   padding: 10px;
   border-bottom: 1px solid #ccc;
-  border-color: transparent;
   cursor: pointer;
-  word-wrap: break-word;  /* Para que el texto largo no desborde */
-  
+  word-wrap: break-word;
 }
 
 .listItemText2 {
-  flex: 1; /* Permite que el texto ocupe el espacio disponible */
-  padding-right: 10px; /* Espacio entre los textos */
+  flex: 1;
+  padding-right: 10px;
   color: rgba(0, 0, 0, 0.511);
   font-size: 14px;
 }
@@ -115,8 +122,9 @@
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  background-color: #ddd;
+  background-color: #e0e7ff;
   font-weight: bold;
+  font-family: 'DynaPuff', sans-serif;
 }
 
 .headerText2 {
@@ -124,87 +132,83 @@
   padding-right: 10px;
 }
 
+.bottomButton2, .bottomButton3 {
+  background-color: #ff5e78 !important;
+  padding: 15px !important;
+  border-radius: 10px !important;
+  margin-top: 10px !important;
+  border: 3px solid #ff5e78 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
 .bottomButton2 {
-  background-color: #F44C7F;
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 10px;
-  border: 3px solid #F44C7F;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 270px;
   height: 50px;
 }
-.bottomButton2:hover {
-  border-color: #F44C7F; 
-  background-color: #fff;
-}
-
-.bottomButton2:hover .buttonText2 {
-  color: #F44C7F; 
-}
-
 
 .bottomButton3 {
-  background-color: #F44C7F;
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 10px;
-  border: 3px solid #F44C7F;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 550px;
   height: 50px;
 }
-.bottomButton3:hover {
-  border-color: #F44C7F; 
-  background-color: #fff;
+
+.bottomButton2:hover, .bottomButton3:hover {
+  background-color: #fff !important;
+  border-color: #ff5e78 !important;
+  transform: scale(1.05) !important;
 }
 
-.bottomButton3:hover .buttonText2 {
-  color: #F44C7F; 
+.bottomButton2:hover .buttonText2, .bottomButton3:hover .buttonText2 {
+  color: #ff5e78 !important;
 }
-
-
 
 .logoutButton2 {
-  border: 1px solid #F44C7F;
-  background-color: transparent;
-  padding: 10px;
-  border-radius: 10px;
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border: 1px solid #ff5e78 !important;
+  background-color: transparent !important;
+  padding: 10px !important;
+  border-radius: 10px !important;
+  margin-top: 20px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease !important;
 }
 
 .logoutButtonText2 {
-  color: #F44C7F;
+  color: #ff5e78 !important;
+  font-family: 'DynaPuff', sans-serif;
 }
-/* Estilo para cuando una farmacia está seleccionada */
+
+.logoutButton2:hover {
+  background-color: #ff5e78 !important;
+}
+
+.logoutButton2:hover .logoutButtonText2 {
+  color: white !important;
+}
+
 .selected {
-  background-color: #f44c7e3e;
-  
+  background-color: #f44c7e3e !important;
 }
 
-
-/* Personalizar la barra de desplazamiento en la lista */
 .list::-webkit-scrollbar {
-  width: 12px; /* Ancho de la barra de desplazamiento */
+  width: 12px;
 }
 
 .list::-webkit-scrollbar-thumb {
-  background-color: #00000050; /* Color de la parte que se mueve */
-  border-radius: 10px; /* Bordes redondeados */
+  background-color: #00000050;
+  border-radius: 10px;
 }
 
 .list::-webkit-scrollbar-thumb:hover {
-  background-color: #F44C7F; /* Color al pasar el mouse */
+  background-color: #ff5e78;
 }
 
 .list::-webkit-scrollbar-track {
-  background: #b8b7b700; /* Color de la parte de fondo */
-  border-radius: 0px; /* Bordes redondeados */
+  background: #b8b7b700;
 }

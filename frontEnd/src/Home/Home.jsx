@@ -66,7 +66,7 @@ function Home() {
       <div className='tituloContainer'>
         <h6>Sedes - Cochabamba</h6>
         <h2>Farmacias Cercanas a Usted</h2>
-        <h6>Estamos a tu disposición para ayudarte.</h6>
+        <h6>Estamos para ayudarte.</h6>
       </div>
 
       <input

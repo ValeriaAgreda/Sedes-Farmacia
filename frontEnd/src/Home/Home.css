@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Sixtyfour+Convergence&family=Spicy+Rice&display=swap');
+
 body {
   display: flex;
   justify-content: center;
@@ -5,90 +7,96 @@ body {
   flex-direction: column;
   padding: 0;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5; 
+  font-family: 'DynaPuff', sans-serif;
+  background-color: #f0f4f8; /* Color más suave y moderno */
 }
 
-.tituloContainer{
+.tituloContainer {
+  font-family: 'Spicy Rice', sans-serif;
   color: #FBFBFB;
   text-align: center;
   margin-bottom: 35px;
   background-color: #393939;
-  border-top-right-radius: 60px;
-  border-top-left-radius: 60px;
-  border-bottom-right-radius: 100px;
-  border-bottom-left-radius: 100px;
-  padding: 70px;
-  padding-left: 100px;
-  padding-right: 100px;
+  border-radius: 50px;
+  padding: 50px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Añade sombra para darle profundidad */
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #333;
+  font-family: 'Sixtyfour Convergence', sans-serif;
+  letter-spacing: 1px;
 }
 
 p {
-  font-size: 1.1rem;
-  color: #555;
+  font-size: 1.2rem;
+  color: #666;
   margin-bottom: 1.5rem;
+  line-height: 1.6;
 }
 
 header {
-  background-color: #eaeaea;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #e0e7ff; /* Color de fondo más atractivo */
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 2rem;
   text-align: center;
 }
 
 .custom-btn,
 .btn-primary {
-  background-color: #ff5e78 !important;  
-  border-color: #ff5e78 !important;      
-  color: white !important;            
+  background-color: #ff5e78;
+  border-color: #ff5e78;
+  color: white;
+  font-weight: bold;
+  font-family: 'DynaPuff', sans-serif;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .custom-btn:hover,
 .btn-primary:hover {
-  background-color: #ff708a !important;  
-  border-color: #ff708a !important;
+  background-color: #ff708a;
 }
 
 .custom-btn-outline,
 .btn-outline-primary {
-  background-color: white !important;
-  border-color: #ff5e78 !important;     
-  color: #ff5e78 !important;            
+  background-color: transparent;
+  border-color: #ff5e78;
+  color: #ff5e78;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .custom-btn-outline:hover,
 .btn-outline-primary:hover {
-  background-color: #ff708a !important; 
-  color: white !important;             
-  border-color: #ff708a !important;
+  background-color: #ff708a;
+  color: white;
 }
 
 .container12 {
-  margin: 10px;
+  margin: 20px;
 }
 
-
-
 .farmacia-details {
-  padding: 20px;
-  background-color: #fff;
+  padding: 25px;
+  background-color: #ffffff;
   border: 2px solid #ff5e78;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center; 
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
   margin-bottom: 1.5rem;
 }
 
 .farmacia-details h3 {
   color: #333;
   font-weight: bold;
+  font-family: 'Sixtyfour Convergence', sans-serif;
 }
 
 .farmacia-details .text-success {
@@ -102,7 +110,8 @@ header {
 .centered-list {
   list-style-type: none;
   padding-left: 0;
-  text-align: center;  
+  text-align: center;
+  font-family: 'DynaPuff', sans-serif;
 }
 
 ul li {
@@ -112,6 +121,8 @@ ul li {
 a {
   color: #ff5e78;
   text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 a:hover {
@@ -120,16 +131,19 @@ a:hover {
 }
 
 footer {
-  background-color: #eaeaea;
+  background-color: #e0e7ff;
   padding: 20px;
   border-radius: 10px;
   margin-top: 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  font-family: 'Spicy Rice', sans-serif;
 }
 
 button {
   margin: 10px;
+  font-family: 'DynaPuff', sans-serif;
+  font-weight: bold;
 }
 
 .leaflet-marker-icon {
@@ -143,3 +157,44 @@ button {
 .leaflet-marker-shadow {
   background-image: url('/leaflet/marker-shadow.png');
 }
+
+.loginButton {
+  background-color: #ff5e78 !important; /* Color de fondo */
+  color: white !important; /* Color del texto */
+  border: none !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: bold !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Sombra para darle profundidad */
+}
+
+.loginButton:hover {
+  background-color: #ff3b58 !important; /* Fondo un poco más oscuro para el hover */
+  transform: scale(1.05) !important; /* Efecto de agrandamiento al pasar el ratón */
+}
+
+.loginButtonText {
+  color: white !important; /* Asegura que el texto sea blanco */
+}
+
+h2{
+  font-size: 2rem !important;
+  color: #000000 !important; /* Color destacado */
+  font-family:"Spicy Rice", serif !important; /* Fuente estilizada */
+  margin-bottom: 15px !important;
+  text-align: center !important;
+  letter-spacing: 1px !important;
+}
+
+h6{
+  font-size: 1rem !important;
+  color: #ffffff !important; /* Color destacado */
+  font-family:"DynaPuff", serif !important; /* Fuente estilizada */
+  margin-bottom: 15px !important;
+  text-align: center !important;
+  letter-spacing: 1px !important;
+}
+

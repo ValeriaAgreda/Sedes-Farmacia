@@ -1,4 +1,5 @@
-/* Login.css */
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Sixtyfour+Convergence&family=Spicy+Rice&display=swap');
+
 .container {
   display: flex;
   justify-content: center;
@@ -6,8 +7,8 @@
   flex-direction: column;
   padding: 0;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  font-family: 'DynaPuff', sans-serif;
+  background-color: #f0f4f8;
   height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
 }
 
@@ -18,7 +19,8 @@
   margin-bottom: 30px;
   text-align: center;
   padding: 10px;
-  color: #000;
+  color: #ff5e78;
+  font-family: 'Spicy Rice', sans-serif;
 }
 
 /* Estilo de etiquetas */
@@ -27,7 +29,8 @@
   margin-bottom: 10px;
   font-weight: bold;
   padding-top: 30px;
-  color: #000;
+  color: #333;
+  font-family: 'DynaPuff', sans-serif;
 }
 
 /* Estilo de inputs */
@@ -42,6 +45,7 @@
   background-color: #fff;
   color: #808080;
   box-shadow: 0px 2px 3.84px rgba(0, 0, 0, 0.25);
+  font-family: 'DynaPuff', sans-serif;
 }
 
 /* Estilo de enlace para recuperar contraseña */
@@ -53,7 +57,8 @@
   border: none;
   outline: none;
   cursor: pointer;
-  margin-top: 20px; /* Ajusta el espaciado superior */
+  margin-top: 20px;
+  font-family: 'DynaPuff', sans-serif;
 }
 .forgotPassword:focus,
 .forgotPassword:active {
@@ -66,27 +71,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #F44C7F;
-
-  border: 3px solid #F44C7F;
-  border-radius: 7px;
+  background-color: #ff5e78 !important;
+  border: 3px solid #ff5e78 !important;
+  border-radius: 7px !important;
   width: 50%;
-  padding: 12px 0; /* Ajusta el padding en lugar de height */
-  margin-top: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  padding: 12px 0 !important;
+  margin-top: 20px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 .loginButton:hover {
-  border-color: #F44C7F;
-
+  background-color: #ff3b58 !important;
+  transform: scale(1.05) !important;
 }
 .loginButtonText {
-  color: #F44C7F;
+  color: white !important;
   font-size: 14px;
-  font-weight: bold;
-}
-.loginButton:hover .loginButtonText {
-  color: #F44C7F;
+  font-weight: bold !important;
+  font-family: 'DynaPuff', sans-serif;
 }
 
 /* Botón de inicio */
@@ -94,45 +97,49 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
-  border: 3px solid #393939;
-  border-radius: 7px;
+  background-color: #fff !important;
+  border: 3px solid #393939 !important;
+  border-radius: 7px !important;
   width: 50%;
-  padding: 12px 0; /* Ajusta el padding en lugar de height */
-  margin-top: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  padding: 12px 0 !important;
+  margin-top: 20px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease !important;
 }
 .homeButton:hover {
-  border-color: #393939;
-  background-color: #393939;
+  border-color: #393939 !important;
+  background-color: #393939 !important;
 }
 .homeButtonText {
-  color: #393939;
+  color: #393939 !important;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: bold !important;
+  font-family: 'DynaPuff', sans-serif;
 }
 .homeButton:hover .homeButtonText {
-  color: #fff;
+  color: #fff !important;
 }
 
+/* Botón de volver */
 .volver-btn {
-  background-color: #ffffff; /* Fondo blanco */
-  border: 2px solid #4a90e2; /* Borde azul */
-  color: #4a90e2; /* Texto azul */
-  padding: 10px 30px; /* Tamaño de padding ajustado */
-  font-size: 1rem; /* Tamaño de fuente */
-  border-radius: 20px; /* Bordes redondeados */
-  margin-top: 20px; /* Espaciado superior */
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  width: 50%; /* Ancho ajustado al diseño de otros botones */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: #ffffff !important;
+  border: 2px solid #4a90e2 !important;
+  color: #4a90e2 !important;
+  padding: 10px 30px !important;
+  font-size: 1rem !important;
+  border-radius: 20px !important;
+  margin-top: 20px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease !important;
+  width: 50% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  font-family: 'DynaPuff', sans-serif;
 }
 
 .volver-btn:hover {
-  background-color: #4a90e2; /* Fondo azul en hover */
-  color: #ffffff; /* Texto blanco en hover */
+  background-color: #4a90e2 !important;
+  color: #ffffff !important;
+  transform: scale(1.05) !important;
 }
