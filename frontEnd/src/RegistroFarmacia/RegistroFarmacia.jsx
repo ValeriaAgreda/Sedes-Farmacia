@@ -46,7 +46,7 @@ const RegistroFarmacia = () => {
   const [ci, setCi] = useState('');
   const [nit, setNit] = useState('');
   const [celular, setCelular] = useState('');
-  const [correo, setCorreo] = useState('');
+  const [gmail, setGmail] = useState('');
 
   const [horasFarmacia, setHorasFarmacia] = useState('8h');
   const [tipoFarmacia, setTipoFarmacia] = useState('Privada');
@@ -110,6 +110,8 @@ const RegistroFarmacia = () => {
     if (!nit) missingFields.push('NIT');
     
     if (!celular) missingFields.push('Celular');
+
+    if (!gmail) missingFields.push('Gmail');
     if (!medicamentosControlados) missingFields.push('Selecciona Medicamentos Controlados');
     if (!fileBase64) missingFields.push('Imagen (debe cargarse un archivo)');
     if (latitud === null || longitud === null) missingFields.push('Ubicación (debe hacer doble clic en el mapa)');
@@ -130,7 +132,7 @@ const RegistroFarmacia = () => {
       fecha_registro: fechaResolucion,
       razon_social: nombre,
       nit: nit,
-      zona_id: zona.id,
+      zona_id: zona.id || 1,
       
       tipo: tipoFarmacia,
       
@@ -142,6 +144,7 @@ const RegistroFarmacia = () => {
       carnet_identidad: ci,
       celular: celular,
       horario_atencion: horasFarmacia,
+      gmail: gmail,
     };
 
     console.log("Datos enviados al backend:", farmaciaData);
@@ -386,6 +389,14 @@ const RegistroFarmacia = () => {
         placeholder="Celular"
         value={celular}
         onChange={(e) => setCelular(e.target.value)}
+        className="input1"
+      />
+
+      <label className="label1">Gmail:</label>
+      <input
+        placeholder="Gmail"
+        value={gmail}
+        onChange={(e) => setGmail(e.target.value)}
         className="input1"
       />
       

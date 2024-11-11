@@ -7,6 +7,10 @@ router.get('/', (req, res) => {
   res.status(200).json('Server on port 8082 and database is connected');
 });
 
+
+
+
+
 // Ruta para obtener todos los códigos
 router.get('/codigoszonas', (req, res) => {
   db.query('SELECT id, nombre FROM codigo;', (error, rows) => {
@@ -97,6 +101,7 @@ router.post('/nuevafarmacia', (req, res) => {
       segundo_apellido,
       carnet_identidad,
       celular,
+      gmail, // Nuevo campo gmail
       horario_atencion // Campo ya existente
     } = req.body;
 
@@ -107,16 +112,17 @@ router.post('/nuevafarmacia', (req, res) => {
       primer_apellido,
       carnet_identidad,
       celular,
+      gmail, // Log del nuevo campo gmail
       horario_atencion,
       tipo  // Log del nuevo campo
     });
 
     const queryDueno = `
-      INSERT INTO Dueno (nombre, primer_apellido, segundo_apellido, carnet_identidad, celular, status)
-      VALUES (?, ?, ?, ?, ?, 1);
+      INSERT INTO Dueno (nombre, primer_apellido, segundo_apellido, carnet_identidad, celular, gmail, status)
+      VALUES (?, ?, ?, ?, ?, ?, 1);
     `;
 
-    const valuesDueno = [nombreDueno, primer_apellido, segundo_apellido, carnet_identidad, celular];
+    const valuesDueno = [nombreDueno, primer_apellido, segundo_apellido, carnet_identidad, celular, gmail];
 
     db.query(queryDueno, valuesDueno, (error, result) => {
       if (error) {
@@ -278,17 +284,18 @@ router.put('/actualizarfarmacia/:id', (req, res) => {
       segundo_apellido,
       carnet_identidad,
       celular,
+      gmail,  // Nuevo campo gmail
       medicamentosControlados
     } = req.body;
 
     // Paso 1: Actualizar el dueño
     const queryDueno = `
       UPDATE Dueno 
-      SET nombre = ?, primer_apellido = ?, segundo_apellido = ?, carnet_identidad = ?, celular = ? 
+      SET nombre = ?, primer_apellido = ?, segundo_apellido = ?, carnet_identidad = ?, celular = ?, gmail = ? 
       WHERE id = (SELECT dueno_id FROM Farmacia WHERE id = ?);
     `;
 
-    const valuesDueno = [nombreDueno, primer_apellido, segundo_apellido, carnet_identidad, celular, id];
+    const valuesDueno = [nombreDueno, primer_apellido, segundo_apellido, carnet_identidad, celular, gmail, id];
 
     db.query(queryDueno, valuesDueno, (error, result) => {
       if (error) {
