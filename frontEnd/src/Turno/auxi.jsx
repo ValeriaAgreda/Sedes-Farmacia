@@ -198,7 +198,7 @@ const Turno = () => {
  
       <button className="cargar-turnos-btn" onClick={handleCargarTurnos}>Cargar Turnos</button>
       <button className="generar-turnos-btn" onClick={handleGenerarTurnos}>Generar Turnos</button>
- 
+          
       <h2>Lista Farmacias de Turno</h2>
  
       <table>

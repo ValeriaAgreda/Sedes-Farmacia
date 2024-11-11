@@ -1,6 +1,83 @@
 const { Router } = require('express');
 const router = Router();
 const MysqlConnection = require('../database');
+const nodemailer = require('nodemailer');
+
+
+router.get('/enviarturnos', (req, res) => {
+    MysqlConnection.query(`
+        SELECT d.gmail, d.nombre AS nombre_dueno, f.nombre AS nombre_farmacia, h.dia_turno
+        FROM dueno d
+        JOIN farmacia f ON d.id = f.dueno_id
+        JOIN farmacia_horas fh ON f.id = fh.farmacia_id
+        JOIN horas h ON fh.hora_id = h.id
+        WHERE d.gmail IS NOT NULL AND d.gmail != '';
+    `, (err, results) => {
+        if (err) {
+            console.error('Error en la consulta:', err);
+            return res.status(500).send({ error: 'Error en la consulta de la base de datos' });
+        }
+
+        // Verifica si los resultados existen
+        if (!results || results.length === 0) {
+            console.log('No se encontraron turnos');
+            return res.status(404).send('No hay turnos para enviar');
+        }
+
+        // Configura el transporte de nodemailer
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: '2000victorhugotapialeon@gmail.com', // Tu correo de Gmail
+                pass: 'dnst anvw ximo alsn' // Tu contraseña de Gmail
+            }
+        });
+
+        // Envía los correos de manera concurrente
+        const emailPromises = results.map(async (turno) => {
+            const { gmail, nombre_dueno, nombre_farmacia, dia_turno } = turno;
+
+            // Verifica si el correo electrónico es válido
+            if (!gmail) {
+                console.log(`No se enviará correo a ${nombre_dueno} porque el correo es nulo`);
+                return; // Salta a la siguiente iteración si el correo es nulo
+            }
+
+            const mailOptions = {
+                from: '2000victorhugotapialeon@gmail.com', // Tu correo de Gmail
+                to: gmail,  // Dirección de correo del dueño
+                subject: `Asignación de turno - ${nombre_farmacia}`,  // Asunto del correo
+                text: `Estimado/a ${nombre_dueno},\n\nLe informamos que se ha asignado un turno a la farmacia ${nombre_farmacia} para el día ${new Date(dia_turno).toLocaleDateString('es-ES', {
+                    weekday: 'long', // Día de la semana completo
+                    year: 'numeric', // Año completo
+                    month: 'long', // Mes completo
+                    day: 'numeric', // Día numérico
+                })}.\n\nAtentamente,\nEl equipo de Sedes Farmacias.`  // Cuerpo del correo
+            };
+            
+
+            try {
+                await transporter.sendMail(mailOptions);
+                console.log(`Correo enviado a ${gmail} para ${nombre_farmacia}`);
+            } catch (emailError) {
+                console.error(`Error al enviar correo a ${gmail}: ${emailError.message}`);
+            }
+        });
+
+        
+
+        res.send('Correos enviados correctamente');
+    });
+});
+
+
+
+
+
+
+
+
+
 
 // Obtener todas las horas activas
 router.get('/', (req, res) => {
@@ -187,5 +264,9 @@ router.get('/ultimaFarmaciaAsignada/:codigoId', (req, res) => {
         res.json({ lastId: rows[0].lastId });
     });
 });
+
+
+
+
 
 module.exports = router;

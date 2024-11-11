@@ -32,6 +32,7 @@ const EditarFarmacia = () => {
   const [ci, setCi] = useState('');
   const [nit, setNit] = useState('');
   const [celular, setCelular] = useState('');
+  const [gmail, setGmail] = useState('');
   const [horasFarmacia, setHorasFarmacia] = useState('8h');
   const [tipoFarmacia, setTipoFarmacia] = useState('Privada');
   const [observaciones, setObservaciones] = useState(''); 
@@ -90,6 +91,32 @@ useEffect(() => {
       const sustanciasData = await sustanciasResponse.json();
       //setMedicamentosControlados(sustanciasData.tiene_sustancias ? 'Ambos' : 'Ninguno');
 
+
+      const response1 = await fetch(`http://localhost:8082/farmacia/farmacia_sustancias/${id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response1.status}`);
+        }
+        const data = await response1.json();
+        const sustanciaId = data.sustancia_id;
+
+        // Asigna el valor a `medicamentosControlados` basado en `sustancia_id`
+        switch (sustanciaId) {
+          case 1:
+            setMedicamentosControlados('Estupefacientes');
+            break;
+          case 2:
+            setMedicamentosControlados('Psicotrópicos');
+            break;
+          case 3:
+            setMedicamentosControlados('Ambos');
+            break;
+          default:
+            setMedicamentosControlados('Ninguno');
+            break;
+        }
+
+
+
       // Convertir imagen desde binario a base64
       if (farmacia.imagen) {
         const base64String = btoa(
@@ -123,6 +150,7 @@ useEffect(() => {
       setApellidoMaterno(dueno.segundo_apellido || '');
       setCi(dueno.carnet_identidad || '');
       setCelular(dueno.celular || '');
+      setGmail(dueno.gmail || '');
     } catch (error) {
       console.error('Error fetching dueno:', error);
     }
@@ -192,6 +220,7 @@ useEffect(() => {
     if (!ci) missingFields.push('Carnet de Identidad');
     if (!nit) missingFields.push('NIT');
     if (!celular) missingFields.push('Celular');
+    if (!gmail) missingFields.push('Gmail');
     if (medicamentosControlados === '') missingFields.push('Selecciona Medicamentos Controlados');
     if (!fileBase64) missingFields.push('Imagen (debe cargarse un archivo)');
     if (latitud === null || longitud === null) missingFields.push('Ubicación (debe hacer doble clic en el mapa)');
@@ -227,6 +256,7 @@ useEffect(() => {
       segundo_apellido: apellidoMaterno,
       carnet_identidad: ci,
       celular,
+      gmail,
       medicamentosControlados
     };
 
@@ -399,6 +429,14 @@ useEffect(() => {
         placeholder="Celular"
         value={celular}
         onChange={(e) => setCelular(e.target.value)}
+        className="input1"
+      />
+
+<label className="label1">Gmail:</label>
+      <input
+        placeholder="Gmail"
+        value={gmail}
+        onChange={(e) => setGmail(e.target.value)}
         className="input1"
       />
 

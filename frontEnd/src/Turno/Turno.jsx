@@ -36,7 +36,22 @@ const Turno = () => {
   const handleVolver = () => {
     navigate('/MenuAdmin'); // Navega a la página anterior
   };
-
+  const handleEmails = async () => {
+    try {
+      // Llamar al backend para enviar los correos electrónicos
+      const response = await fetch(`http://localhost:8082/horas/enviarturnos`);
+      
+      if (!response.ok) {
+        throw new Error('Error al enviar los correos');
+      }
+  
+      alert('Correos enviados con éxito');
+    } catch (error) {
+      console.error('Error enviando correos:', error);
+      alert('Hubo un error al enviar los correos');
+    }
+  };
+  
   const handleCargarTurnos = async () => {
     if (!filtroZona || !filtroMes) {
       alert('Por favor selecciona una zona y un mes');
@@ -188,6 +203,7 @@ const Turno = () => {
       <button className="cargar-turnos-btn" onClick={handleCargarTurnos}>Cargar Turnos</button>
       <button className="generar-turnos-btn" onClick={handleGenerarTurnos}>Generar Turnos</button>
       <h2>Lista Farmacias de Turno</h2>
+      <button className="cargar-turnos-btn" onClick={handleEmails}>Mandar Gmails</button>
       <table>
         <thead>
           <tr>
