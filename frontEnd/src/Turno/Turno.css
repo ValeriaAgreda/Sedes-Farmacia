@@ -1,116 +1,125 @@
-/* Turno.css */
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Sixtyfour+Convergence&family=Spicy+Rice&display=swap');
 
 .turno-container {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'DynaPuff', sans-serif;
     text-align: center;
-    background-color: #fdfdfd;
+    background-color: #ffffff;
     padding: 40px;
     border-radius: 20px;
-    width: 100%; /* Aumentado el ancho para que ocupe más espacio */
-    max-width: 900px; /* Máximo ancho para evitar que se expanda demasiado */
+    width: 100%;
+    max-width: 900px;
     margin: 40px auto;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     border: 1px solid #eaeaea;
-  }
-  
-  h1 {
-    font-size: 2rem;
-    color: #333;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #ff5e78;
     margin-bottom: 20px;
-  }
-  
-  .usuario {
+    font-family: 'Spicy Rice', sans-serif;
+}
+
+.usuario {
     font-size: 1.2rem;
-    color: #888;
-    margin-bottom: 10px;
-  }
-  
-  .usuario span {
-    font-weight: bold;
     color: #555;
-  }
-  
-  .generar-turnos-btn {
-    background-color: #ff4d73;
-    border: none;
-    color: white;
-    padding: 15px 40px; /* Ajustado para que sea más ancho */
-    font-size: 1.2rem;
-    border-radius: 30px;
-    cursor: pointer;
-    margin-bottom: 25px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .generar-turnos-btn:hover {
-    background-color: #ff3361;
-  }
-  
-  h2 {
+    margin-bottom: 10px;
+    font-family: 'DynaPuff', sans-serif;
+}
+
+.usuario span {
+    font-weight: bold;
+    color: #333;
+}
+
+.generar-turnos-btn {
+    background-color: #ff5e78 !important;
+    border: none !important;
+    color: white !important;
+    padding: 15px 40px !important;
+    font-size: 1.2rem !important;
+    border-radius: 30px !important;
+    cursor: pointer !important;
+    margin-bottom: 25px !important;
+    transition: background-color 0.3s ease, transform 0.2s ease !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.generar-turnos-btn:hover {
+    background-color: #ff3361 !important;
+    transform: scale(1.05) !important;
+}
+
+h2 {
     font-size: 1.5rem;
-    color: #000;
+    color: #333;
     margin-bottom: 15px;
-  }
-  
-  .filtro-zona {
+    font-family: 'DynaPuff', sans-serif;
+}
+
+.filtro-zona {
     margin-bottom: 25px;
-  }
-  
-  .filtro-zona input {
-    padding: 12px; /* Aumentado el padding para mayor comodidad */
+}
+
+.filtro-zona input {
+    padding: 12px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 20px;
-    width: 100%; /* Ajustado a 100% para que ocupe todo el espacio */
-    max-width: 350px; /* Máximo ancho para evitar que se estire demasiado */
+    width: 100%;
+    max-width: 350px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 0 auto; /* Centrado */
-  }
-  
-  table {
+    margin: 0 auto;
+    font-family: 'DynaPuff', sans-serif;
+}
+
+table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 30px;
-    max-width: 100%; /* Ajustado para que no se desborde */
-  }
-  
-  table th, table td {
+    max-width: 100%;
+}
+
+table th, table td {
     border: 1px solid #ddd;
     padding: 12px;
-  }
-  
-  table th {
-    background-color: #f5f5f5;
-    color: #000;
+}
+
+table th {
+    background-color: #e0e7ff;
+    color: #333;
     text-transform: uppercase;
     font-weight: 600;
-  }
-  
-  table td {
+    font-family: 'DynaPuff', sans-serif;
+}
+
+table td {
     text-align: center;
     color: #333;
     font-size: 1rem;
-  }
-  
-  input[type="checkbox"] {
+    font-family: 'DynaPuff', sans-serif;
+}
+
+input[type="checkbox"] {
     transform: scale(1.5);
     cursor: pointer;
-  }
-  
-  .volver-btn {
-    background-color: #ffffff;
-    border: 2px solid #ff4d73;
-    color: #ff4d73;
-    padding: 10px 30px; /* Ajustado el ancho para que sea más visible */
-    font-size: 1.2rem;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .volver-btn:hover {
-    background-color: #ff4d73;
-    color: white;
-  }
-  
+}
+
+.volver-btn {
+    background-color: #28a745 !important;
+    border: 2px solid #28a745 !important;
+    color: white !important;
+    padding: 10px 30px !important;
+    font-size: 1.2rem !important;
+    border-radius: 30px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease, transform 0.2s ease !important;
+    font-family: 'DynaPuff', sans-serif;
+}
+
+.volver-btn:hover {
+    background-color: #218838 !important;
+    color: white !important;
+    transform: scale(1.05) !important;
+}

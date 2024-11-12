@@ -85,12 +85,15 @@ const Turno = () => {
     }
   
     const anioActual = new Date().getFullYear();
-    let mesInicio = new Date().getMonth() + 1; // Mes actual (de 1 a 12)
+    const mesInicio = parseInt(filtroMes); // Mes seleccionado en el filtro
   
     try {
       const response = await fetch(`http://localhost:8082/codigo/codigofiltro/${filtroZona}`);
       const data = await response.json();
       const totalFarmacias = data.length;
+  
+      // Agregamos un console.log para verificar la cantidad de farmacias
+      console.log(`Total de farmacias obtenidas: ${totalFarmacias}`);
   
       if (totalFarmacias === 0) {
         alert('No se encontraron farmacias para la zona seleccionada');
@@ -100,7 +103,6 @@ const Turno = () => {
       let asignacionFarmacias = [];
       let lastAssignedIndex = 0;
   
-      // Obtener el último índice de asignación previa
       const fetchLastAssignment = await fetch(`http://localhost:8082/horas/ultimaFarmaciaAsignada/${filtroZona}`);
       const lastAssignmentData = await fetchLastAssignment.json();
   
@@ -108,41 +110,66 @@ const Turno = () => {
       if (lastAssignmentData && lastAssignmentData.lastId) {
         const lastFarmaciaId = lastAssignmentData.lastId;
         const lastFarmaciaIndex = farmaciaOrdenada.findIndex(farmacia => farmacia.id === lastFarmaciaId);
-        
-        // Si encontramos el índice de la última farmacia asignada, movemos al siguiente índice
+  
         if (lastFarmaciaIndex >= 0) {
           const startIdx = (lastFarmaciaIndex + 1) % farmaciaOrdenada.length;
-          // Reordenamos el array para que el nuevo mes comience desde esta nueva posición
           farmaciaOrdenada = [
             ...farmaciaOrdenada.slice(startIdx),
             ...farmaciaOrdenada.slice(0, startIdx)
           ];
         }
       } else {
-        // Mezclar aleatoriamente si no hay un orden previo
         farmaciaOrdenada = farmaciaOrdenada.sort(() => Math.random() - 0.5);
       }
   
-      // Generar turnos para los próximos tres meses
-      for (let offset = 0; offset < 3; offset++) {  // Cambiado a < 3 para solo tres meses
-        const mesActual = (mesInicio + offset - 1) % 12 + 1; // Avanzar en los meses con rollover
-        const anioAsignacion = anioActual + Math.floor((mesInicio + offset - 1) / 12);
-        const totalDiasMes = new Date(anioAsignacion, mesActual, 0).getDate();
+      const totalDiasMes = new Date(anioActual, mesInicio, 0).getDate();
+      let esDivisible = false;
+      let cociente = 1;
   
-        for (let dia = 1; dia <= totalDiasMes; dia++) {
+      // Calcular si el número de farmacias es divisible por el número de días en el mes
+      if (totalFarmacias % totalDiasMes === 0) {
+        esDivisible = true;
+        cociente = totalFarmacias / totalDiasMes;
+        console.log(`Divisible: Se asignarán ${cociente} farmacias por día.`);
+      }
+  
+      // Generar turnos
+      for (let dia = 1; dia <= totalDiasMes; dia++) {
+        if (esDivisible) {
+          // Asignar varias farmacias por día según el cociente
+          for (let i = 0; i < cociente; i++) {
+            if (lastAssignedIndex >= farmaciaOrdenada.length) lastAssignedIndex = 0;
+            const farmacia = farmaciaOrdenada[lastAssignedIndex];
+  
+            asignacionFarmacias.push({
+              id: farmacia.id,
+              nombre: `Turno ${dia}`,
+              farmacia_nombre: farmacia.nombre,
+              direccion: farmacia.direccion,
+              dia_turno: `${anioActual}-${mesInicio.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`,
+              hora_entrada: '08:00:00',
+              hora_salida: '20:00:00',
+              turno: true
+            });
+  
+            lastAssignedIndex++;
+          }
+        } else {
+          // Asignación normal de 1 farmacia por día
           if (lastAssignedIndex >= farmaciaOrdenada.length) lastAssignedIndex = 0;
           const farmacia = farmaciaOrdenada[lastAssignedIndex];
-          
+  
           asignacionFarmacias.push({
             id: farmacia.id,
-            farmacia_nombre: farmacia.farmacia_nombre,
+            nombre: `Turno ${dia}`,
+            farmacia_nombre: farmacia.nombre,
             direccion: farmacia.direccion,
-            fecha_turno: `${anioAsignacion}-${mesActual.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`,
+            dia_turno: `${anioActual}-${mesInicio.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`,
             hora_entrada: '08:00:00',
             hora_salida: '20:00:00',
             turno: true
           });
-    
+  
           lastAssignedIndex++;
         }
       }
@@ -168,7 +195,7 @@ const Turno = () => {
   
       const result = await saveResponse.json();
       console.log('Turnos guardados:', result);
-      alert('Turnos generados y guardados exitosamente para los próximos tres meses');
+      alert('Turnos generados y guardados exitosamente');
     } catch (error) {
       console.error('Error guardando turnos:', error);
       alert('Error al guardar turnos.');

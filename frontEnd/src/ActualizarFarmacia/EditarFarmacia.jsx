@@ -192,15 +192,49 @@ useEffect(() => {
 
   // Manejar la carga de archivos y convertir a base64
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFileBase64(reader.result); // Guarda el archivo en base64
+  const file = event.target.files[0];
+  const maxFileSize = 5 * 1024 * 1024; // 5 MB
+
+  if (file && file.size <= maxFileSize) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxWidth = 1000; // Ancho máximo para la imagen redimensionada
+        const maxHeight = 1000; // Alto máximo para la imagen redimensionada
+        let width = img.width;
+        let height = img.height;
+
+        // Redimensionar si es necesario
+        if (width > maxWidth || height > maxHeight) {
+          if (width > height) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          } else {
+            width = (width * maxHeight) / height;
+            height = maxHeight;
+          }
+        }
+
+        // Redibujar la imagen en el canvas redimensionado
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convertir el canvas a base64
+        const base64Image = canvas.toDataURL('image/jpeg', 0.8); // Calidad de compresión de 80%
+        setFileBase64(base64Image);
       };
-      reader.readAsDataURL(file); // Convierte el archivo a base64
-    }
-  };
+    };
+    reader.readAsDataURL(file);
+  } else {
+    alert('El archivo es demasiado grande. Por favor selecciona una imagen de hasta 5 MB.');
+  }
+};
+
 
   const handleLocationSelect = (lat, lng) => {
     setLatitud(lat);
