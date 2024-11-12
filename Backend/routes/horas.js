@@ -28,8 +28,8 @@ router.get('/enviarturnos', (req, res) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: '2000victorhugotapialeon@gmail.com', // Tu correo de Gmail
-                pass: 'dnst anvw ximo alsn' // Tu contraseña de Gmail
+                user: 'barrientosnicolas67@gmail.com', // Tu correo de Gmail
+                pass: 'acxd eodt damg fqlv' // Tu contraseña de Gmail
             }
         });
 
@@ -44,7 +44,7 @@ router.get('/enviarturnos', (req, res) => {
             }
 
             const mailOptions = {
-                from: '2000victorhugotapialeon@gmail.com', // Tu correo de Gmail
+                from: 'barrientosnicolas67@gmail.com', // Tu correo de Gmail
                 to: gmail,  // Dirección de correo del dueño
                 subject: `Asignación de turno - ${nombre_farmacia}`,  // Asunto del correo
                 text: `Estimado/a ${nombre_dueno},\n\nLe informamos que se ha asignado un turno a la farmacia ${nombre_farmacia} para el día ${new Date(dia_turno).toLocaleDateString('es-ES', {

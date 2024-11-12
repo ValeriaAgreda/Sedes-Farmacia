@@ -104,7 +104,7 @@ function Home() {
   <div className="listContainer2" style={{ padding: '20px', width: "550px" }}>
     <h3 style={{ fontSize: "25px", fontWeight: 'bold', margin: '20px' }}>
       {farmacia.nombre} -{' '}
-      <span className="text-success">Legal</span>{' '}
+      <span className="text-success">AUTORIZADA</span>{' '}
     </h3>
     <p className="subtitle1" style={{ fontSize: "20px" }}>Fotografia Referencia:</p>
     {fileBase64 ? (
