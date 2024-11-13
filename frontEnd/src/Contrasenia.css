@@ -1,68 +1,83 @@
 .contrasenia-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #FBFBFB;
-    padding: 50px;
-  }
- 
-  .contrasenia-title {
-    font-size: 35px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    text-align: center;
-    padding: 10px;
-    color: black;
-  }
- 
-  .contrasenia-form {
-    width: 100%;
-    max-width: 400px;
-  }
- 
-  .contrasenia-label {
-    font-size: 18px;
-    margin-bottom: 10px;
-    font-weight: bold;
-    padding-top: 30px;
-    color: black;
-  }
- 
-  .contrasenia-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    text-align: center;
-    background-color: #fff;
-    color: #808080;
-    box-shadow: 0px 2px 3.84px rgba(0, 0, 0, 0.25);
-  }
- 
-  .contrasenia-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #F44C7F;
-    height: 50px;
-    border: none;
-    border-radius: 7px;
-    width: 100%;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-  }
- 
-  .contrasenia-button:hover {
-    background-color: #e13b6c;
-  }
- 
-  .contrasenia-message {
-    margin-top: 20px;
-    font-size: 16px;
-    color: #808080;
-    text-align: center;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #FBFBFB;
+  padding: 50px;
+}
+
+.contrasenia-title {
+  font-size: 35px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+  padding: 10px;
+  color: black;
+}
+
+.contrasenia-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.contrasenia-label {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  padding-top: 30px;
+  color: black;
+}
+
+.contrasenia-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+  background-color: #fff;
+  color: #808080;
+  box-shadow: 0px 2px 3.84px rgba(0, 0, 0, 0.25);
+}
+
+.contrasenia-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F44C7F;
+  height: 50px;
+  border: none;
+  border-radius: 7px;
+  width: 100%;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.contrasenia-button:hover {
+  background-color: #e13b6c;
+}
+
+.contrasenia-message {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #808080;
+  text-align: center;
+}
+.volver-btn {
+  background-color: #007bff; /* Color del botón */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.volver-btn:hover {
+  background-color: #0056b3; /* Color del botón al pasar el ratón */
+}
+  

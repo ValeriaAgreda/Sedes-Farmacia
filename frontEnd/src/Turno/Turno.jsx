@@ -36,9 +36,9 @@ const Turno = () => {
   const handleVolver = () => {
     navigate('/MenuAdmin'); // Navega a la página anterior
   };
+
   const handleEmails = async () => {
     try {
-      // Llamar al backend para enviar los correos electrónicos
       const response = await fetch(`http://localhost:8082/horas/enviarturnos`);
       
       if (!response.ok) {
@@ -85,32 +85,31 @@ const Turno = () => {
     }
   
     const anioActual = new Date().getFullYear();
-    const mesInicio = parseInt(filtroMes); // Mes seleccionado en el filtro
-  
+    const mesInicio = parseInt(filtroMes);
+
     try {
       const response = await fetch(`http://localhost:8082/codigo/codigofiltro/${filtroZona}`);
       const data = await response.json();
       const totalFarmacias = data.length;
-  
-      // Agregamos un console.log para verificar la cantidad de farmacias
+
       console.log(`Total de farmacias obtenidas: ${totalFarmacias}`);
   
       if (totalFarmacias === 0) {
         alert('No se encontraron farmacias para la zona seleccionada');
         return;
       }
-  
+
       let asignacionFarmacias = [];
       let lastAssignedIndex = 0;
   
       const fetchLastAssignment = await fetch(`http://localhost:8082/horas/ultimaFarmaciaAsignada/${filtroZona}`);
       const lastAssignmentData = await fetchLastAssignment.json();
-  
+
       let farmaciaOrdenada = [...data];
       if (lastAssignmentData && lastAssignmentData.lastId) {
         const lastFarmaciaId = lastAssignmentData.lastId;
         const lastFarmaciaIndex = farmaciaOrdenada.findIndex(farmacia => farmacia.id === lastFarmaciaId);
-  
+
         if (lastFarmaciaIndex >= 0) {
           const startIdx = (lastFarmaciaIndex + 1) % farmaciaOrdenada.length;
           farmaciaOrdenada = [
@@ -121,22 +120,19 @@ const Turno = () => {
       } else {
         farmaciaOrdenada = farmaciaOrdenada.sort(() => Math.random() - 0.5);
       }
-  
+
       const totalDiasMes = new Date(anioActual, mesInicio, 0).getDate();
       let esDivisible = false;
       let cociente = 1;
-  
-      // Calcular si el número de farmacias es divisible por el número de días en el mes
+
       if (totalFarmacias % totalDiasMes === 0) {
         esDivisible = true;
         cociente = totalFarmacias / totalDiasMes;
         console.log(`Divisible: Se asignarán ${cociente} farmacias por día.`);
       }
-  
-      // Generar turnos
+
       for (let dia = 1; dia <= totalDiasMes; dia++) {
         if (esDivisible) {
-          // Asignar varias farmacias por día según el cociente
           for (let i = 0; i < cociente; i++) {
             if (lastAssignedIndex >= farmaciaOrdenada.length) lastAssignedIndex = 0;
             const farmacia = farmaciaOrdenada[lastAssignedIndex];
@@ -155,7 +151,6 @@ const Turno = () => {
             lastAssignedIndex++;
           }
         } else {
-          // Asignación normal de 1 farmacia por día
           if (lastAssignedIndex >= farmaciaOrdenada.length) lastAssignedIndex = 0;
           const farmacia = farmaciaOrdenada[lastAssignedIndex];
   
@@ -173,8 +168,7 @@ const Turno = () => {
           lastAssignedIndex++;
         }
       }
-  
-      // Guardar los turnos generados en el servidor
+
       const saveResponse = await fetch('http://localhost:8082/horas/guardarTurnos', {
         method: 'POST',
         headers: {
@@ -192,7 +186,7 @@ const Turno = () => {
         const text = await saveResponse.text();
         throw new Error(`Error en la respuesta: ${saveResponse.status}, ${text}`);
       }
-  
+
       const result = await saveResponse.json();
       console.log('Turnos guardados:', result);
       alert('Turnos generados y guardados exitosamente');
@@ -201,8 +195,6 @@ const Turno = () => {
       alert('Error al guardar turnos.');
     }
   };
-  
-  
   
   return (
     <div className="turno-container">
@@ -236,36 +228,20 @@ const Turno = () => {
           <tr>
             <th>Nombre</th>
             <th>Dirección</th>
-            <th>Fecha Turno</th>
-            <th>Turno</th>
+            <th>Fecha de Turno</th>
           </tr>
         </thead>
         <tbody>
-          {turnos.length > 0 ? (
-            turnos.map((turno, index) => (
-              <tr key={index}>
-                <td>{turno.farmacia_nombre}</td>
-                <td>{turno.direccion}</td>
-                <td>{turno.dia_turno ? new Date(turno.dia_turno).toLocaleDateString() : 'Fecha no válida'}</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={turno.turno}
-                    readOnly
-                  />
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4">No se generaron turnos</td>
+          {turnos.map((turno) => (
+            <tr key={turno.id}>
+              <td>{turno.farmacia_nombre}</td>
+              <td>{turno.direccion}</td>
+              <td>{new Date(turno.dia_turno).toLocaleDateString('es-ES')}</td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
-
       <button className="volver-btn" onClick={handleVolver}>Volver</button>
-    
     </div>
   );
 };
