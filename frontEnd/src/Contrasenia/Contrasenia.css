@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Sixtyfour+Convergence&family=Spicy+Rice&display=swap');
+
+.contrasenia-container {
+  font-family: 'DynaPuff', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 900px;
+  margin: 40px auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #eaeaea;
+}
+
+.contrasenia-title {
+  font-size: 2.5rem;
+  color: #ff5e78;
+  margin-bottom: 20px;
+  font-family: 'Spicy Rice', sans-serif;
+  text-align: center;
+}
+
+.contrasenia-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.contrasenia-label {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+  padding-top: 30px;
+  color: #333;
+}
+
+.contrasenia-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  background-color: #fff;
+  color: #808080;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: 'DynaPuff', sans-serif;
+}
+
+.contrasenia-button {
+  background-color: #ff5e78;
+  color: white;
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 25px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  text-align: center;
+}
+
+.contrasenia-button:hover {
+  background-color: #ff3361;
+  transform: scale(1.05);
+}
+
+.contrasenia-message {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #808080;
+  text-align: center;
+}
+
+.volver-btn {
+  background-color: #007bff;
+  color: white;
+  border: 2px solid #007bff;
+  padding: 10px 30px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-family: 'DynaPuff', sans-serif;
+  margin-top: 20px;
+}
+
+.volver-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}

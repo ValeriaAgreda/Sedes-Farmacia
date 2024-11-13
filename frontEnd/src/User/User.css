@@ -1,0 +1,99 @@
+.usuarios-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #FBFBFB;
+    padding: 50px;
+  }
+ 
+  .usuarios-title {
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+    padding: 10px;
+    color: black;
+  }
+ 
+  .usuarios-form {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 30px;
+  }
+ 
+  .label {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    padding-top: 10px;
+    color: black;
+  }
+ 
+  .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    color: #808080;
+    box-shadow: 0px 2px 3.84px rgba(0, 0, 0, 0.25);
+  }
+ 
+  .usuarios-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #F44C7F;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+ 
+  .usuarios-message {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #808080;
+    text-align: center;
+  }
+ 
+  .usuarios-subtitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+ 
+  .usuarios-list {
+    list-style: none;
+    padding: 0;
+  }
+ 
+  .usuarios-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+ 
+  .usuarios-edit-button, .usuarios-delete-button {
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+ 
+  .usuarios-edit-button {
+    background-color: #4CAF50;
+    color: white;
+  }
+ 
+  .usuarios-delete-button {
+    background-color: #F44C7F;
+    color: white;
+  }

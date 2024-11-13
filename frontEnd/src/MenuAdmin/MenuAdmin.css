@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Sixtyfour+Convergence&family=Spicy+Rice&display=swap');
+
+.container2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  font-family: 'DynaPuff', sans-serif;
+  background-color: #f0f4f8;
+}
+
+.title2 {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+  padding: 10px;
+  color: #070707;
+  font-family: 'Spicy Rice', sans-serif;
+}
+
+.nameLabel2 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+}
+
+.userName2 {
+  color: #808080;
+  margin-bottom: 15px;
+  padding-top: 10px;
+  padding-bottom: 30px;
+  text-align: center;
+  font-family: 'DynaPuff', sans-serif;
+}
+
+.buttonContainer2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.button2 {
+  background-color: #ff5e78 !important;
+  padding: 10px !important;
+  border-radius: 10px !important;
+  width: 170px !important;
+  height: 50px !important;
+  display: flex !important;
+  border: 3px solid #ff5e78 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.buttonText2 {
+  color: white !important;
+  font-weight: bold !important;
+  font-family: 'DynaPuff', sans-serif;
+}
+
+.button2:hover {
+  background-color: #fff !important;
+  border-color: #ff5e78 !important;
+  transform: scale(1.05) !important;
+}
+
+.button2:hover .buttonText2 {
+  color: #ff5e78 !important;
+}
+
+.listContainer2 {
+  height: auto;
+  width: 400px;
+  border: 1px solid #808080;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.busquedaTitle {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-family: 'DynaPuff', sans-serif;
+}
+
+.listItem2 {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  word-wrap: break-word;
+}
+
+.listItemText2 {
+  flex: 1;
+  padding-right: 10px;
+  color: rgba(0, 0, 0, 0.511);
+  font-size: 14px;
+}
+
+.header2 {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #e0e7ff;
+  font-weight: bold;
+  font-family: 'DynaPuff', sans-serif;
+}
+
+.headerText2 {
+  flex: 1;
+  padding-right: 10px;
+}
+
+.bottomButton2, .bottomButton3 {
+  background-color: #ff5e78 !important;
+  padding: 15px !important;
+  border-radius: 10px !important;
+  margin-top: 10px !important;
+  border: 3px solid #ff5e78 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.bottomButton2 {
+  width: 270px;
+  height: 50px;
+}
+
+.bottomButton3 {
+  width: 550px;
+  height: 50px;
+}
+
+.bottomButton2:hover, .bottomButton3:hover {
+  background-color: #fff !important;
+  border-color: #ff5e78 !important;
+  transform: scale(1.05) !important;
+}
+
+.bottomButton2:hover .buttonText2, .bottomButton3:hover .buttonText2 {
+  color: #ff5e78 !important;
+}
+
+.logoutButton2 {
+  border: 1px solid #ff5e78 !important;
+  background-color: transparent !important;
+  padding: 10px !important;
+  border-radius: 10px !important;
+  margin-top: 20px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease !important;
+}
+
+.logoutButtonText2 {
+  color: #ff5e78 !important;
+  font-family: 'DynaPuff', sans-serif;
+}
+
+.logoutButton2:hover {
+  background-color: #ff5e78 !important;
+}
+
+.logoutButton2:hover .logoutButtonText2 {
+  color: white !important;
+}
+
+.selected {
+  background-color: #f44c7e3e !important;
+}
+
+.list::-webkit-scrollbar {
+  width: 12px;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: #00000050;
+  border-radius: 10px;
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+  background-color: #ff5e78;
+}
+
+.list::-webkit-scrollbar-track {
+  background: #b8b7b700;
+}

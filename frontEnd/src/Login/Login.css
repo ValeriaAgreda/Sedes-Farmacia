@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Sixtyfour+Convergence&family=Spicy+Rice&display=swap');
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  font-family: 'DynaPuff', sans-serif;
+  background-color: #f0f4f8;
+  height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
+}
+
+/* Estilo de título */
+.title {
+  font-size: 35px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+  padding: 10px;
+  color: #ff5e78;
+  font-family: 'Spicy Rice', sans-serif;
+}
+
+/* Estilo de etiquetas */
+.label {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  padding-top: 30px;
+  color: #333;
+  font-family: 'DynaPuff', sans-serif;
+}
+
+/* Estilo de inputs */
+.input {
+  width: 100%;
+  max-width: 400px; /* Limita el ancho del input */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+  background-color: #fff;
+  color: #808080;
+  box-shadow: 0px 2px 3.84px rgba(0, 0, 0, 0.25);
+  font-family: 'DynaPuff', sans-serif;
+}
+
+/* Estilo de enlace para recuperar contraseña */
+.forgotPassword {
+  background-color: transparent;
+  color: #808080;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-top: 20px;
+  font-family: 'DynaPuff', sans-serif;
+}
+.forgotPassword:focus,
+.forgotPassword:active {
+  outline: none;
+  border: none;
+}
+
+/* Botón de login */
+.loginButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ff5e78 !important;
+  border: 3px solid #ff5e78 !important;
+  border-radius: 7px !important;
+  width: 50%;
+  padding: 12px 0 !important;
+  margin-top: 20px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+.loginButton:hover {
+  background-color: #ff3b58 !important;
+  transform: scale(1.05) !important;
+}
+.loginButtonText {
+  color: white !important;
+  font-size: 14px;
+  font-weight: bold !important;
+  font-family: 'DynaPuff', sans-serif;
+}
+
+/* Botón de inicio */
+.homeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff !important;
+  border: 3px solid #393939 !important;
+  border-radius: 7px !important;
+  width: 50%;
+  padding: 12px 0 !important;
+  margin-top: 20px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease !important;
+}
+.homeButton:hover {
+  border-color: #393939 !important;
+  background-color: #393939 !important;
+}
+.homeButtonText {
+  color: #393939 !important;
+  font-size: 14px;
+  font-weight: bold !important;
+  font-family: 'DynaPuff', sans-serif;
+}
+.homeButton:hover .homeButtonText {
+  color: #fff !important;
+}
+
+/* Botón de volver */
+.volver-btn {
+  background-color: #ffffff !important;
+  border: 2px solid #4a90e2 !important;
+  color: #4a90e2 !important;
+  padding: 10px 30px !important;
+  font-size: 1rem !important;
+  border-radius: 20px !important;
+  margin-top: 20px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease !important;
+  width: 50% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  font-family: 'DynaPuff', sans-serif;
+}
+
+.volver-btn:hover {
+  background-color: #4a90e2 !important;
+  color: #ffffff !important;
+  transform: scale(1.05) !important;
+}
