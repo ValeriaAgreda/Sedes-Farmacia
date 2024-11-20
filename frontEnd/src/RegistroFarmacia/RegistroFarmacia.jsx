@@ -149,6 +149,57 @@ const RegistroFarmacia = () => {
     if (!fileBase64) missingFields.push('Imagen (debe cargarse un archivo)');
     if (latitud === null || longitud === null) missingFields.push('Ubicación (debe hacer doble clic en el mapa)');
     
+    // Validaciones de formato
+ 
+  // Validar solo letras en nombre, apellido paterno y apellido materno
+  const regexLetras = /^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s]+$/;
+  if (!regexLetras.test(nombre)) {
+    setError('El nombre solo puede contener letras.');
+    return;
+  }
+  if (!regexLetras.test(apellidoPaterno)) {
+    setError('El apellido paterno solo puede contener letras.');
+    return;
+  }
+  if (!regexLetras.test(apellidoMaterno)) {
+    setError('El apellido materno solo puede contener letras.');
+    return;
+  }
+ 
+  // Validar formato de CI (Bolivia) - Puede ser 7 o 8 dígitos
+  const regexCI = /^[0-9]{7,8}$/;
+  if (!regexCI.test(ci)) {
+    setError('El Carnet de Identidad debe contener 7 u 8 dígitos.');
+    return;
+  }
+ 
+  // Validar formato de NIT (Bolivia) - 9 dígitos seguidos de un guion y 4 dígitos (ej. 123456789-0)
+  //const regexNIT = /^[0-9]{9}-[0-9]{4}$/;
+  //if (!regexNIT.test(nit)) {
+  //  setError('El NIT debe tener el formato correcto (ej. 123456789-0).');
+  //  return;
+  //}
+ 
+  // Validar formato de celular (Bolivia) - 8 dígitos
+  const regexCelular = /^[0-9]{8}$/;
+  if (!regexCelular.test(celular)) {
+    setError('El celular debe contener 8 dígitos.');
+    return;
+  }
+ 
+  // Validar formato de correo electrónico
+  const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!regexEmail.test(gmail)) {
+    setError('El correo electrónico no es válido.');
+    return;
+  }
+  // Validación para el Nro Resolución (solo números)
+  const numberRegex = /^[0-9]+$/; // Expresión regular para solo números
+  if (!nroResolucion.match(numberRegex)) {
+    missingFields.push('Nro Resolución debe contener solo números');
+  }
+
+
     if (missingFields.length > 0) {
       setError(`Por favor, complete los siguientes campos: ${missingFields.join(', ')}`);
       return;
