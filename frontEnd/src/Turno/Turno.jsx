@@ -86,30 +86,53 @@ const Turno = () => {
   
     const anioActual = new Date().getFullYear();
     const mesInicio = parseInt(filtroMes);
-
+  
     try {
+      // Verificar si ya existen turnos generados
+      const responseExistentes = await fetch(`http://localhost:8082/horas/turnosZonaMes/${filtroZona}/${mesInicio}/${anioActual}`);
+      const dataExistentes = await responseExistentes.json();
+  
+      if (dataExistentes.length > 0) {
+        // Si ya hay turnos generados, preguntar si desea reemplazarlos
+        const confirmar = window.confirm('Ya existen turnos generados para esta zona y mes. ¿Deseas reemplazarlos?');
+        if (!confirmar) {
+          return; // No hacer nada si el usuario cancela
+        }
+  
+        // Eliminar turnos existentes si el usuario confirma
+        const eliminarResponse = await fetch(`http://localhost:8082/horas/eliminarTurnosZonaMes/${filtroZona}/${mesInicio}/${anioActual}`, {
+          method: 'DELETE',
+        });
+  
+        if (!eliminarResponse.ok) {
+          throw new Error('Error al eliminar los turnos existentes');
+        }
+      }
+  
+      // Lógica existente para generar turnos
       const response = await fetch(`http://localhost:8082/codigo/codigofiltro/${filtroZona}`);
       const data = await response.json();
       const totalFarmacias = data.length;
-
+  
       console.log(`Total de farmacias obtenidas: ${totalFarmacias}`);
   
       if (totalFarmacias === 0) {
         alert('No se encontraron farmacias para la zona seleccionada');
         return;
       }
-
+  
+      // Resto del código para generar turnos
       let asignacionFarmacias = [];
       let lastAssignedIndex = 0;
   
       const fetchLastAssignment = await fetch(`http://localhost:8082/horas/ultimaFarmaciaAsignada/${filtroZona}`);
       const lastAssignmentData = await fetchLastAssignment.json();
-
+  
       let farmaciaOrdenada = [...data];
       if (lastAssignmentData && lastAssignmentData.lastId) {
         const lastFarmaciaId = lastAssignmentData.lastId;
         const lastFarmaciaIndex = farmaciaOrdenada.findIndex(farmacia => farmacia.id === lastFarmaciaId);
-
+  
         if (lastFarmaciaIndex >= 0) {
           const startIdx = (lastFarmaciaIndex + 1) % farmaciaOrdenada.length;
           farmaciaOrdenada = [
@@ -120,17 +143,17 @@ const Turno = () => {
       } else {
         farmaciaOrdenada = farmaciaOrdenada.sort(() => Math.random() - 0.5);
       }
-
+  
       const totalDiasMes = new Date(anioActual, mesInicio, 0).getDate();
       let esDivisible = false;
       let cociente = 1;
-
+  
       if (totalFarmacias % totalDiasMes === 0) {
         esDivisible = true;
         cociente = totalFarmacias / totalDiasMes;
         console.log(`Divisible: Se asignarán ${cociente} farmacias por día.`);
       }
-
+  
       for (let dia = 1; dia <= totalDiasMes; dia++) {
         if (esDivisible) {
           for (let i = 0; i < cociente; i++) {
@@ -168,7 +191,7 @@ const Turno = () => {
           lastAssignedIndex++;
         }
       }
-
+  
       const saveResponse = await fetch('http://localhost:8082/horas/guardarTurnos', {
         method: 'POST',
         headers: {
@@ -186,7 +209,7 @@ const Turno = () => {
         const text = await saveResponse.text();
         throw new Error(`Error en la respuesta: ${saveResponse.status}, ${text}`);
       }
-
+  
       const result = await saveResponse.json();
       console.log('Turnos guardados:', result);
       alert('Turnos generados y guardados exitosamente');

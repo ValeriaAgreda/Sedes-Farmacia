@@ -247,6 +247,47 @@ router.get('/ultimaFarmaciaAsignada/:codigoId', (req, res) => {
     });
 });
 
+// Eliminar turnos por zona y mes
+router.delete('/eliminarTurnosZonaMes/:codigoId/:mes/:anio', (req, res) => {
+    const { codigoId, mes, anio } = req.params;
+  
+    // Primero eliminar las relaciones en farmacia_horas
+    const deleteFarmaciaHorasQuery = `
+      DELETE fh FROM Farmacia_Horas fh
+      JOIN Horas h ON fh.hora_id = h.id
+      JOIN Farmacia f ON fh.farmacia_id = f.id
+      WHERE f.codigo_id = ? AND MONTH(h.dia_turno) = ? AND YEAR(h.dia_turno) = ?;
+    `;
+  
+    MysqlConnection.query(deleteFarmaciaHorasQuery, [codigoId, mes, anio], (errorRelacion, resultsRelacion) => {
+      if (errorRelacion) {
+        console.error('Error deleting relationships in farmacia_horas:', errorRelacion);
+        return res.status(500).json({ error: 'Error al eliminar relaciones en farmacia_horas' });
+      }
+  
+      // Luego eliminar los turnos en Horas
+      const deleteHorasQuery = `
+        DELETE h FROM Horas h
+        JOIN Farmacia_Horas fh ON h.id = fh.hora_id
+        JOIN Farmacia f ON fh.farmacia_id = f.id
+        WHERE f.codigo_id = ? AND MONTH(h.dia_turno) = ? AND YEAR(h.dia_turno) = ?;
+      `;
+  
+      MysqlConnection.query(deleteHorasQuery, [codigoId, mes, anio], (errorHoras, resultsHoras) => {
+        if (errorHoras) {
+          console.error('Error deleting turns in Horas:', errorHoras);
+          return res.status(500).json({ error: 'Error al eliminar turnos en Horas' });
+        }
+  
+        res.json({
+          message: 'Turnos eliminados correctamente',
+          affectedRowsRelacion: resultsRelacion.affectedRows,
+          affectedRowsHoras: resultsHoras.affectedRows,
+        });
+      });
+    });
+  });
+  
 
 
 
