@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
-
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './User.css'; // Importar el archivo CSS
- 
+import './User.css';
+
 const Usuarios = () => {
   const navigate = useNavigate();
 
@@ -13,7 +12,8 @@ const Usuarios = () => {
   const [gmail, setGmail] = useState('');
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [message, setMessage] = useState('');
- 
+  const [error, setError] = useState('');
+
   // Obtener todos los usuarios
   const fetchUsuarios = async () => {
     try {
@@ -23,51 +23,90 @@ const Usuarios = () => {
       console.error('Error fetching usuarios:', error);
     }
   };
- 
+
   const handleVolver = () => {
-    navigate('/MenuAdmin'); // Navega a la página anterior
+    navigate('/MenuAdmin');
   };
+
   useEffect(() => {
     fetchUsuarios();
   }, []);
- 
+
+  // Validar campos
+  const validateFields = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!user.trim() || !password.trim() || !gmail.trim()) {
+      setError('Todos los campos son obligatorios.');
+      return false;
+    }
+
+    if (user.length < 5 || user.length > 16) {
+      setError('El usuario debe tener entre 5 y 16 caracteres.');
+      return false;
+    }
+
+    if (password.length < 5 || password.length > 16) {
+      setError('La contraseña debe tener entre 5 y 16 caracteres.');
+      return false;
+    }
+
+    if (!emailRegex.test(gmail)) {
+      setError('El correo debe ser válido.');
+      return false;
+    }
+
+    setError('');
+    return true;
+  };
+
   // Crear nuevo usuario
   const createUsuario = async () => {
+    if (!validateFields()) return;
+
     try {
       await axios.post('http://localhost:8082/usuario', { user, password, gmail });
       setMessage('Usuario creado exitosamente');
-      fetchUsuarios(); // Actualiza la lista de usuarios
+      fetchUsuarios();
+      setUser('');
+      setPassword('');
+      setGmail('');
     } catch (error) {
       console.error('Error creando usuario:', error);
       setMessage('Error creando usuario');
     }
   };
- 
+
   // Actualizar un usuario existente
   const updateUsuario = async () => {
+    if (!validateFields()) return;
+
     try {
       await axios.put(`http://localhost:8082/usuario/${selectedUserId}`, { user, password, gmail });
       setMessage('Usuario actualizado exitosamente');
-      fetchUsuarios(); // Actualiza la lista de usuarios
+      fetchUsuarios();
       setSelectedUserId(null);
+      setUser('');
+      setPassword('');
+      setGmail('');
     } catch (error) {
       console.error('Error actualizando usuario:', error);
       setMessage('Error actualizando usuario');
     }
   };
- 
+
   // Eliminar un usuario (marcar como inactivo)
   const deleteUsuario = async (id) => {
     try {
       await axios.delete(`http://localhost:8082/usuario/${id}`);
       setMessage('Usuario eliminado');
-      fetchUsuarios(); // Actualiza la lista de usuarios
+      fetchUsuarios();
     } catch (error) {
       console.error('Error eliminando usuario:', error);
       setMessage('Error eliminando usuario');
     }
   };
- 
+
   // Manejar la selección de usuario para editar
   const handleEdit = (usuario) => {
     setUser(usuario.user);
@@ -75,11 +114,11 @@ const Usuarios = () => {
     setGmail(usuario.gmail);
     setSelectedUserId(usuario.id);
   };
- 
+
   return (
     <div className="usuarios-container">
       <h1 className="usuarios-title">Gestión de Usuarios</h1>
- 
+
       <div className="usuarios-form">
         <label className="label">Usuario</label>
         <input
@@ -88,7 +127,7 @@ const Usuarios = () => {
           onChange={(e) => setUser(e.target.value)}
           placeholder="Usuario"
         />
- 
+
         <label className="label">Contraseña</label>
         <input
           className="input"
@@ -97,7 +136,7 @@ const Usuarios = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Contraseña"
         />
- 
+
         <label className="label">Correo Electrónico</label>
         <input
           className="input"
@@ -106,7 +145,7 @@ const Usuarios = () => {
           onChange={(e) => setGmail(e.target.value)}
           placeholder="Correo"
         />
- 
+
         <button
           className="usuarios-button"
           onClick={selectedUserId ? updateUsuario : createUsuario}
@@ -114,9 +153,10 @@ const Usuarios = () => {
           {selectedUserId ? 'Actualizar Usuario' : 'Crear Usuario'}
         </button>
       </div>
- 
+
+      {error && <p className="usuarios-error">{error}</p>}
       {message && <p className="usuarios-message">{message}</p>}
- 
+
       <h2 className="usuarios-subtitle">Lista de Usuarios</h2>
       <ul className="usuarios-list">
         {usuarios.map((usuario) => (
@@ -132,9 +172,8 @@ const Usuarios = () => {
         ))}
       </ul>
       <button className="volver-btn" onClick={handleVolver}>Volver</button>
-
     </div>
   );
 };
- 
+
 export default Usuarios;
