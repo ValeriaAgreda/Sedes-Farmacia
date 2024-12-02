@@ -225,7 +225,7 @@ useEffect(() => {
         ctx.drawImage(img, 0, 0, width, height);
 
         // Convertir el canvas a base64
-        const base64Image = canvas.toDataURL('image/jpeg', 0.8); // Calidad de compresión de 80%
+        const base64Image = canvas.toDataURL('image/jpeg', 0.2); // Calidad de compresión de 80%
         setFileBase64(base64Image);
       };
     };
